@@ -60,13 +60,15 @@ public class ControllerSetOneTimePassword {
 		
 		//Making sure the admin has selcted a user.
 		if (selectedUser == null || selectedUser.equals("<Select a User>")) {
-			System.out.println("Please select a user.");
+			 ViewSetOneTimePassword.alertPasswordError.setContentText("Please select a user.");
+			    ViewSetOneTimePassword.alertPasswordError.showAndWait();
 			return;
 		}
 		
 		//Making sure the admin has entered a one-time password.
 		if (oneTimePassword == null || oneTimePassword.isBlank()) {
-			System.out.println("Please enter a one-time password.");
+			ViewSetOneTimePassword.alertPasswordError.setContentText("Please enter a one-time password.");
+			ViewSetOneTimePassword.alertPasswordError.showAndWait();
 			return;
 		}
 		

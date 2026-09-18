@@ -15,16 +15,16 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 /**
  * </p> Title: ViewSetOneTimePassword Class </p>
  *
- * <p>
- * Description: This class provides the JavaFX user interface for an administrator
+ * <p> Description: This class provides the JavaFX user interface for an administrator
  * to set a one-time password for an existing user.
  * 
  * The administrator selects a user from a ComboBox and can then generate and
- * assign a one-time password to that user's account.
- * </p>
+ * assign a one-time password to that user's account. </p>
  * 
  *  @author Nicholas Yeremin
  *  
@@ -65,6 +65,9 @@ public class ViewSetOneTimePassword {
 	
 	//Button used to assign OTP
 	protected static Button button_SetOneTimePassword = new Button("Set a One-Time Password");
+	
+	//Alert message for password error.
+	protected static Alert alertPasswordError = new Alert(AlertType.ERROR);
 	
 	//Seperator Lines to keep the UI consistent.
 	protected static Line line1 = new Line();
@@ -150,6 +153,10 @@ public class ViewSetOneTimePassword {
 		line2.setStartY(525);
 		line2.setEndX(width - 20);
 		line2.setEndY(525);
+		
+		//Password Error Handling
+		alertPasswordError.setTitle("One-Time Password Error");
+		alertPasswordError.setHeaderText("Unable to Set One-Time Password");
 		
 		//Return Button
 		returnButton.setFont(Font.font("Dialog", 18));

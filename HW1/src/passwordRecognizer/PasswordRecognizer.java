@@ -111,7 +111,7 @@ public class PasswordRecognizer {
 			errMessage += "Password must contain at least one special character; \n";
 			
 		if (!foundLongEnough)
-			errMessage += "Password must be at least 7 characters long; \n";
+			errMessage += "Password must be at least 8 characters long; \n";
 		
 		if (errMessage == "")
 			return "";

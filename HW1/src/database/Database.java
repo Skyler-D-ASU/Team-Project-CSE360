@@ -978,7 +978,8 @@ public class Database {
 
     public boolean setOneTimePassword(String username, String oneTimePassword) {
         String query =
-                "UPDATE userDB SET password = ? WHERE userName = ?";
+                "UPDATE userDB SET password = ?, oneTimePassword = TRUE " 
+        + "WHERE userName = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, oneTimePassword);
@@ -993,6 +994,66 @@ public class Database {
             
         } catch (SQLException e) {
         	System.out.println("Database error while setting OTP:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+
+     * <p> Method: isOneTimePassword </p>
+     *
+     * <p> Description: Determines whether the specified user currently
+     * has a one-time password.</p>
+     *
+     * @param username the username to check
+     * @return true if the user has a one-time password, false otherwise
+     */
+
+    public boolean isOneTimePassword(String username) {
+        String query =
+                "SELECT oneTimePassword FROM userDB WHERE userName = ?";
+        
+        try (PreparedStatement pstmt =
+                connection.prepareStatement(query)) {
+            pstmt.setString(1, username);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getBoolean("oneTimePassword");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
+     * <p> Method: setPermanentPassword </p>
+     *
+     * <p> Description: Replaces a user's one-time password with
+     * a new permanent password and removes the one-time password flag.</p>
+     *
+     * @param username the username whose password will be updated
+     * @param newPassword the user's new permanent password
+     * @return true if the password was updated successfully
+     */
+
+    public boolean setPermanentPassword(String username, String newPassword) {
+        String query =
+                "UPDATE userDB SET password = ?, oneTimePassword = FALSE "
+                + "WHERE userName = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, username);
+
+            int rowsUpdated = pstmt.executeUpdate();
+
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
