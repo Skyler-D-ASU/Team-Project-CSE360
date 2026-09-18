@@ -966,6 +966,38 @@ public class Database {
 		return false;
 	}
 	
+	 /**
+     * </p> Method: public boolean setOneTimePassword(String username, String oneTimePassword) </p>
+     * 
+     * </p> Description: Create a one-time password for the selected user. </p>
+     *
+     * @param username the username whose password will be updated
+     * @param oneTimePassword the one-time password
+     * @return true if the password was updated successfully
+     */
+
+    public boolean setOneTimePassword(String username, String oneTimePassword) {
+        String query =
+                "UPDATE userDB SET password = ? WHERE userName = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, oneTimePassword);
+            pstmt.setString(2, username);
+            
+            int rowsUpdated = pstmt.executeUpdate();
+            
+            System.out.println("Username being updated: " + username);
+            System.out.println("Rows updated: " + rowsUpdated);
+            
+            return rowsUpdated > 0;
+            
+        } catch (SQLException e) {
+        	System.out.println("Database error while setting OTP:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+	
 	
 	// Attribute getters for the current user
 	/*******

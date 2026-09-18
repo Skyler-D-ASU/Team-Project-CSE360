@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
 /**
  * </p> Title: ViewSetOneTimePassword Class </p>
  *
@@ -56,6 +57,15 @@ public class ViewSetOneTimePassword {
 	//The label used the display the User's details.
 	protected static Label label_UserDetails = new Label();
 	
+	//The label used for the OneTimePassword button.
+	protected static Label label_OneTimePassword = new Label("One-Time Password");
+	
+	//Where the admin enters the one-time password.
+	protected static TextField text_OneTimePassword = new TextField();
+	
+	//Button used to assign OTP
+	protected static Button button_SetOneTimePassword = new Button("Set a One-Time Password");
+	
 	//Seperator Lines to keep the UI consistent.
 	protected static Line line1 = new Line();
 	protected static Line line2 = new Line();
@@ -66,6 +76,9 @@ public class ViewSetOneTimePassword {
 	//Setting Up Drop-box to display a list of all users.
 	public static void setupUserComboBox() {
 		List<String> userList = theDatabase.getUserList();
+		
+		//Removing the admin from the drop-box
+		userList.remove(theUser.getUserName());
 		
 		combobox_SelectUser.setItems(FXCollections.observableArrayList(userList));
 		
@@ -113,6 +126,25 @@ public class ViewSetOneTimePassword {
 		combobox_SelectUser.setLayoutX(280);
 		combobox_SelectUser.setLayoutY(125);
 		
+		//One-Time Password
+		setupLabelUI(label_OneTimePassword, "Arial",
+				20, 250, Pos.BASELINE_LEFT,20,220);
+		
+		text_OneTimePassword.setStyle("-fx-font: 16 Dialog;");
+		text_OneTimePassword.setMinWidth(250);
+		text_OneTimePassword.setLayoutX(280);
+		text_OneTimePassword.setLayoutY(215);
+		
+		//Button to set OTP
+		button_SetOneTimePassword.setFont(Font.font("Dialog", 18));
+		button_SetOneTimePassword.setMinWidth(250);
+		button_SetOneTimePassword.setAlignment(Pos.CENTER);
+		button_SetOneTimePassword.setLayoutX(280);
+		button_SetOneTimePassword.setLayoutY(260);
+		
+		button_SetOneTimePassword.setOnAction(e ->
+		{ControllerSetOneTimePassword.performSetOneTimePassword();});
+		
 		//Line 2
 		line2.setStartX(20);
 		line2.setStartY(525);
@@ -130,7 +162,8 @@ public class ViewSetOneTimePassword {
 			performReturn();});
 	
 		theRootPane.getChildren().addAll(label_titlePage, label_UserDetails, line1, 
-				label_SelectUser, combobox_SelectUser, line2, returnButton);
+				label_SelectUser, combobox_SelectUser, label_OneTimePassword, 
+				text_OneTimePassword, button_SetOneTimePassword, line2, returnButton);
 		
 		theStage.setTitle("Set One-Time Password");
 		theStage.setScene(theSetOneTimePasswordScene);

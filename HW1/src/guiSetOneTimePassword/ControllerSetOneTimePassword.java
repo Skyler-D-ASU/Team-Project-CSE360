@@ -1,6 +1,7 @@
 package guiSetOneTimePassword;
 
 import database.Database;
+import passwordRecognizer.PasswordRecognizer;
 /*******
  * <p> Title: ControllerSetOneTimePassword. </p>
  * 
@@ -45,6 +46,50 @@ public class ControllerSetOneTimePassword {
 		}
 		
 		theDatabase.getUserAccountDetails(ViewSetOneTimePassword.theSelectedUser);
+	}
+	
+	protected static void performSetOneTimePassword() {
+		
+		//Grag selcted user
+		String selectedUser = ViewSetOneTimePassword.
+				combobox_SelectUser.getValue();
+		
+		//Getting OTP entered by admin
+		String oneTimePassword = ViewSetOneTimePassword.
+				text_OneTimePassword.getText();
+		
+		//Making sure the admin has selcted a user.
+		if (selectedUser == null || selectedUser.equals("<Select a User>")) {
+			System.out.println("Please select a user.");
+			return;
+		}
+		
+		//Making sure the admin has entered a one-time password.
+		if (oneTimePassword == null || oneTimePassword.isBlank()) {
+			System.out.println("Please enter a one-time password.");
+			return;
+		}
+		
+		//Validating the one-time password.
+		String passwordError = PasswordRecognizer.
+				evaluatePassword(oneTimePassword);
+		
+		if (!passwordError.isEmpty()) {
+			System.out.println(passwordError);
+			return;
+		}
+		
+		//Temp test
+		boolean success = theDatabase.
+				setOneTimePassword(selectedUser, oneTimePassword);
+		
+		if (success) {
+			System.out.println("One-time password successfully set for "
+					+ selectedUser);
+		}
+		else {
+			System.out.println("Unable to set one-time password.");
+		}
 	}
 	
 	protected static void performReturn() {
