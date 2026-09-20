@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import database.Database;
 import entityClasses.User;
 import guiNewAccount.ViewNewAccount;
+import guiTools.PasswordEvaluator;
 import guiTools.UserNameRecognizer;
 import javafx.stage.Stage;
 
@@ -44,7 +45,8 @@ public class ControllerFirstAdmin {
 	private static String adminUsername = "";
 	private static String adminPassword1 = "";
 	private static String adminPassword2 = "";		
-	protected static Database theDatabase = applicationMain.FoundationsMain.database;		
+	protected static Database theDatabase = applicationMain.FoundationsMain.database;	
+	private static boolean validPassword = false;
 
 	/*-********************************************************************************************
 
@@ -80,6 +82,7 @@ public class ControllerFirstAdmin {
 	protected static void setAdminPassword1() {
 		adminPassword1 = ViewFirstAdmin.text_AdminPassword1.getText();
 		ViewFirstAdmin.label_PasswordsDoNotMatch.setText("");
+		ViewFirstAdmin.label_PasswordInvalid.setText("");
 	}
 	
 	
@@ -108,11 +111,19 @@ public class ControllerFirstAdmin {
 		
 		String userErr = UserNameRecognizer.checkForValidUserName(adminUsername);
 		
+		String passwordErr = PasswordEvaluator.evaluatePassword(adminPassword1);
+		
 		if (userErr.compareTo("Valid") != 0) {
 			ViewFirstAdmin.text_AdminPassword1.setText("");
 			ViewFirstAdmin.text_AdminPassword2.setText("");
 			ViewFirstAdmin.label_PasswordsDoNotMatch.setText("");
 			ViewFirstAdmin.label_UsernameInvalid.setText(userErr);
+		}
+		
+		// Make sure password is valid before checking that they match
+		else if (passwordErr.compareTo("") != 0) {
+			System.out.println(passwordErr);
+			ViewFirstAdmin.label_PasswordInvalid.setText(passwordErr);
 		}
 		
 		// Make sure the two passwords are the same

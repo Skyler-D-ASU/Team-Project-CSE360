@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import database.Database;
 import entityClasses.User;
+import guiFirstAdmin.ViewFirstAdmin;
+import guiTools.PasswordEvaluator;
 import guiTools.UserNameRecognizer;
 import guiUserLogin.ControllerUserLogin; // Imports New Package
 /*******
@@ -80,16 +82,23 @@ public class ControllerNewAccount {
 		// Verifies that the UserName meets all criteria
 		
 		String userErr = UserNameRecognizer.checkForValidUserName(username);
+		String passwordErr = PasswordEvaluator.evaluatePassword(password);
 		
 		if (userErr.compareTo("Valid") != 0) {
 			ViewNewAccount.alertUsernamePasswordError.setTitle("UserName Error");
 			ViewNewAccount.alertUsernamePasswordError.setHeaderText(userErr);
-			ViewNewAccount.alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+			ViewNewAccount.alertUsernamePasswordError.setContentText("Correct the UserName and try again.");
+			ViewNewAccount.alertUsernamePasswordError.showAndWait();
 		}
 		
-		
-	
-			
+		// Make sure password is valid before checking that they match
+		else if (passwordErr.compareTo("") != 0) {
+			System.out.println(passwordErr);
+			ViewNewAccount.alertUsernamePasswordError.setTitle("Password Error");
+			ViewNewAccount.alertUsernamePasswordError.setHeaderText(passwordErr);
+			ViewNewAccount.alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+			ViewNewAccount.alertUsernamePasswordError.showAndWait();
+		}
 		
 		// Make sure the two passwords are the same.	
 		else if (ViewNewAccount.text_Password1.getText().
@@ -143,6 +152,9 @@ public class ControllerNewAccount {
 			// must be the same, and clear the message as soon as the first character is typed.
 			ViewNewAccount.text_Password1.setText("");
 			ViewNewAccount.text_Password2.setText("");
+			ViewNewAccount.alertUsernamePasswordError.setTitle("Passwords Do Not Match");
+			ViewNewAccount.alertUsernamePasswordError.setHeaderText("The two passwords must be identical.");
+			ViewNewAccount.alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
 			ViewNewAccount.alertUsernamePasswordError.showAndWait();
 		}
 	}
