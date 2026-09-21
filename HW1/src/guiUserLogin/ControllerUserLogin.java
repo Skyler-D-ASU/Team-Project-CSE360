@@ -101,14 +101,22 @@ public class ControllerUserLogin {
     		ViewUserLogin.alertUsernamePasswordError.showAndWait();
     		return;
     	}
-		// System.out.println("*** Password is valid for this user");
+  
 		
 		// Establish this user's details
     	User user = new User(username, password, theDatabase.getCurrentFirstName(), 
     			theDatabase.getCurrentMiddleName(), theDatabase.getCurrentLastName(), 
     			theDatabase.getCurrentPreferredFirstName(), theDatabase.getCurrentEmailAddress(), 
     			theDatabase.getCurrentAdminRole(), 
+    	
     			theDatabase.getCurrentNewRole1(), theDatabase.getCurrentNewRole2());
+    	
+    	//Redirects user to new password page if using a One-Time Password
+    	if (theDatabase.isOneTimePassword(username)) {
+    		guiSetNewPassword.ViewSetNewPassword.
+    		displaySetNewPassword(theStage, user);
+    		return;
+    	}
     	
     	// See which home page dispatch to use
 		int numberOfRoles = theDatabase.getNumberOfRoles(user);		
