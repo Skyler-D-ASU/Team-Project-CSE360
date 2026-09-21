@@ -77,7 +77,7 @@ public class ControllerAdminHome {
 		String errStr = EmailAddressRecognizer.checkEmailAddress(emailAddress);
 		if (errStr.compareTo("") != 0) {
 			System.out.println(errStr);
-			ViewAdminHome.alertEmailError.setTitle("Password Error");
+			ViewAdminHome.alertEmailError.setTitle("Email Error");
 			ViewAdminHome.alertEmailError.setHeaderText(errStr);
 			ViewAdminHome.alertEmailError.setContentText("Correct the Email and try again.");
 			ViewAdminHome.alertEmailError.showAndWait();
@@ -165,6 +165,8 @@ public class ControllerAdminHome {
 		// Get user input result
 		String username = ViewAdminHome.RemovingUserPrompt.getResult();
 		
+		
+		
 		if (username == null) { // user clicked cancel
 		}else if (theDatabase.getCurrentUsername().equals(username) ) { // Username is the same as currently logged in Admin
 			ViewAdminHome.alertCannotDeleteUser.setHeaderText("User cannot be the same as current Admin");
@@ -173,16 +175,18 @@ public class ControllerAdminHome {
 		} else if ( !theDatabase.doesUserExist(username) ) { // username does not exist
 			ViewAdminHome.alertCannotDeleteUser.setHeaderText("User is not found in system");
 			ViewAdminHome.alertCannotDeleteUser.showAndWait();
+			
+			//DummyAccountGeneration.createDummyUsers(); // generates dummy account names for testing (see DummyAccountGeneration.java for my info)
 
 		} else {
-			//DummyAccountGeneration.createDummyUsers(); // generates dummy account names for testing (see DummyAccountGeneration.java for my info)
 			
 			// Build and display UI for a user that is allowed to be deleted
 			Text confirmationTxt = new Text("Are You Sure You Would Like To Remove " + username);
 			
 			Button confirmButton = new Button("Yes");
-			confirmButton.setOnAction(event -> {theDatabase.deleteUser(username); 
-												DeleteUserStage.hide();} );
+			confirmButton.setOnAction(event -> {theDatabase.deleteUser(username);
+											ViewAdminHome.label_NumberOfUsers.setText("Number of users: " + theDatabase.getNumberOfUsers());
+											DeleteUserStage.hide();} );
 			
 			Button denyButton = new Button("No");
 			denyButton.setOnAction(event -> {DeleteUserStage.hide();} );
