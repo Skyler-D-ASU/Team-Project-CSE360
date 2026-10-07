@@ -109,7 +109,7 @@ public class ControllerUserLogin {
     			theDatabase.getCurrentPreferredFirstName(), theDatabase.getCurrentEmailAddress(), 
     			theDatabase.getCurrentAdminRole(), 
     	
-    			theDatabase.getCurrentNewRole1(), theDatabase.getCurrentNewRole2());
+    			theDatabase.getCurrentContributorRole(), theDatabase.getCurrentNewRole2());
     	
     	//Redirects user to new password page if using a One-Time Password
     	if (theDatabase.isOneTimePassword(username)) {
@@ -130,10 +130,10 @@ public class ControllerUserLogin {
 				if (loginResult) {
 					guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
 				}
-			} else if (user.getNewRole1()) {
-				loginResult = theDatabase.loginRole1(user);
+			} else if (user.getContributorRole()) {
+				loginResult = theDatabase.loginContributorRole(user);
 				if (loginResult) {
-					guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+					guiContributor.ViewContributorHome.displayContributorHome(theStage, user);
 				}
 			} else if (user.getNewRole2()) {
 				loginResult = theDatabase.loginRole2(user);

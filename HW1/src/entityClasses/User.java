@@ -228,7 +228,7 @@ public class User {
 	 *
      */
     // Gets the current value of the role1 attribute.
-	public boolean getNewRole1() { return role1; }
+	public boolean getContributorRole() { return role1; }
 
     
     /*****

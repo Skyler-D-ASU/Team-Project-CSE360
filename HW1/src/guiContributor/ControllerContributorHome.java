@@ -1,4 +1,4 @@
-package guiRole1;
+package guiContributor;
 
 
 /*******
@@ -21,7 +21,7 @@ package guiRole1;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
-public class ControllerRole1Home {
+public class ControllerContributorHome {
 
 	/*-*******************************************************************************************
 
@@ -36,7 +36,7 @@ public class ControllerRole1Home {
 	/**
 	 * Default constructor is not used.
 	 */
-	public ControllerRole1Home() {
+	public ControllerContributorHome() {
 	}
 
 	/**********
@@ -47,7 +47,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performUpdate () {
-		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole1Home.theStage, ViewRole1Home.theUser);
+		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}	
 
 	/**********
@@ -59,7 +59,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewRole1Home.theStage);
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewContributorHome.theStage);
 	}
 	
 	/**********

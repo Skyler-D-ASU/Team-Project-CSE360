@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import HW2.lessonPost;
 import entityClasses.User;
 
 /*******
@@ -54,7 +55,7 @@ public class Database {
 	private String currentPreferredFirstName;
 	private String currentEmailAddress;
 	private boolean currentAdminRole;
-	private boolean currentNewRole1;
+	private boolean currentContributorRole;
 	private boolean currentNewRole2;
 
 	/*******
@@ -111,9 +112,10 @@ public class Database {
 				+ "preferredFirstName VARCHAR(255), "
 				+ "emailAddress VARCHAR(255), "
 				+ "adminRole BOOL DEFAULT FALSE, "
-				+ "newRole1 BOOL DEFAULT FALSE, "
+				+ "ContributorRole BOOL DEFAULT FALSE, "
 				+ "newRole2 BOOL DEFAULT FALSE, "
-				+ "oneTimePassword BOOL DEFAULT FALSE)";
+				+ "oneTimePassword BOOL DEFAULT FALSE)"
+				+ "";
 		statement.execute(userTable);
 		
 		// Create the invitation codes table
@@ -122,7 +124,21 @@ public class Database {
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
+	    
+	    // Create Posts Table
+	    String PostsTable = "CREATE TABLE IF NOT EXISTS Posts ("
+	    		+ "ID INT AUTO_INCREMENT PRIMARY KEY, "
+	            + "author TEXT NOT NULL, "
+	    		+ "postTitle TEXT NOT NULL, "
+	            + "postBody TEXT NOT NULL, "
+	    		+ "timeEffort TEXT NOT NULL, "
+	            + "titleEditable BOOL DEFAULT TRUE, "
+	    		+ "bodyEditable BOOL DEFAULT TRUE, "
+	    		+ "timeEditable BOOL DEFAULT TRUE)";
+	    statement.execute(PostsTable);
 	}
+	
+	
 
 
 /*******
@@ -180,7 +196,7 @@ public class Database {
  */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
-				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2) "
+				+ "lastName, preferredFirstName, emailAddress, adminRole, ContributorRole, newRole2) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
@@ -207,8 +223,8 @@ public class Database {
 			currentAdminRole = user.getAdminRole();
 			pstmt.setBoolean(8, currentAdminRole);
 			
-			currentNewRole1 = user.getNewRole1();
-			pstmt.setBoolean(9, currentNewRole1);
+			currentContributorRole = user.getContributorRole();
+			pstmt.setBoolean(9, currentContributorRole);
 			
 			currentNewRole2 = user.getNewRole2();
 			pstmt.setBoolean(10, currentNewRole2);
@@ -261,7 +277,7 @@ public class Database {
 						rs.getString("preferredFirstName"),
 						rs.getString("emailAddress"),
 						rs.getBoolean("adminRole"),
-						rs.getBoolean("newRole1"),
+						rs.getBoolean("ContributorRole"),
 						rs.getBoolean("newRole2")			
 					);
 				
@@ -303,7 +319,7 @@ public class Database {
 	
 	
 /*******
- * <p> Method: boolean loginRole1(User user) </p>
+ * <p> Method: boolean loginContributorRole(User user) </p>
  * 
  * <p> Description: Check to see that a user with the specified username, password, and role
  * 		is the same as a row in the table for the username, password, and role. </p>
@@ -313,10 +329,10 @@ public class Database {
  * @return true if the specified user has been logged in as an Student else false.
  * 
  */
-	public boolean loginRole1(User user) {
+	public boolean loginContributorRole(User user) {
 		// Validates a student user's login credentials.
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
-				+ "newRole1 = TRUE";
+				+ "ContributorRole = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -425,7 +441,7 @@ public class Database {
 	public int getNumberOfRoles (User user) {
 		int numberOfRoles = 0;
 		if (user.getAdminRole()) numberOfRoles++;
-		if (user.getNewRole1()) numberOfRoles++;
+		if (user.getContributorRole()) numberOfRoles++;
 		if (user.getNewRole2()) numberOfRoles++;
 		return numberOfRoles;
 	}	
@@ -809,7 +825,7 @@ public class Database {
 	    }
 	}
 	
-	
+
 	/*******
 	 * <p> Method: String getEmailAddress(String username) </p>
 	 * 
@@ -911,7 +927,7 @@ public class Database {
 	    	currentPreferredFirstName = rs.getString(7);
 	    	currentEmailAddress = rs.getString(8);
 	    	currentAdminRole = rs.getBoolean(9);
-	    	currentNewRole1 = rs.getBoolean(10);
+	    	currentContributorRole = rs.getBoolean(10);
 	    	currentNewRole2 = rs.getBoolean(11);
 			return true;
 	    } catch (SQLException e) {
@@ -952,16 +968,16 @@ public class Database {
 				return false;
 			}
 		}
-		if (role.compareTo("Role1") == 0) {
-			String query = "UPDATE userDB SET newRole1 = ? WHERE username = ?";
+		if (role.compareTo("Contributor") == 0) {
+			String query = "UPDATE userDB SET ContributorRole = ? WHERE username = ?";
 			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 				pstmt.setString(1, value);
 				pstmt.setString(2, username);
 				pstmt.executeUpdate();
 				if (value.compareTo("true") == 0)
-					currentNewRole1 = true;
+					currentContributorRole = true;
 				else
-					currentNewRole1 = false;
+					currentContributorRole = false;
 				return true;
 			} catch (SQLException e) {
 				return false;
@@ -1078,6 +1094,211 @@ public class Database {
         }
     }
 	
+
+    public List<lessonPost> getAllPosts() {
+        String query =
+        		"SELECT ID, author, postTitle, postBody, timeEffort, titleEditable ,bodyEditable, timeEditable FROM Posts";
+        
+        List<lessonPost> r = new ArrayList<>();
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        	ResultSet rs = pstmt.executeQuery();
+        	
+        	while (rs.next()) {
+        		System.out.println(
+        	                "DATABASE ROW -> ID: " + rs.getInt("ID") +
+        	                " AUTHOR: [" + rs.getString("author") + "]" +
+        	                " TITLE: [" + rs.getString("postTitle") + "]"
+        	            );
+        		lessonPost LP = new lessonPost(
+                        rs.getString("author"),
+                        rs.getString("postTitle"),
+                        rs.getString("postBody"),
+                        rs.getString("timeEffort"),
+                        rs.getBoolean("titleEditable"),
+                        rs.getBoolean("bodyEditable"),
+                        rs.getBoolean("timeEditable"),
+                        rs.getInt("ID"));
+        				
+        		r.add(LP);
+        	}
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+		return r;
+        
+    }
+    
+    public boolean isPostBodyEditable(int ID) {
+		String query = "SELECT bodyEditable FROM Posts WHERE ID = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, ID);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getBoolean("bodyEditable");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return false;
+	}
+    
+    public boolean isPostTitleEditable(int ID) {
+		String query = "SELECT titleEditable FROM Posts WHERE ID = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, ID);
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            return rs.getBoolean("titleEditable"); 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return false;
+    }
+    
+    public boolean isPostTimeEditable(int ID) {
+		String query = "SELECT timeEditable FROM Posts WHERE ID = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, ID);
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            return rs.getBoolean("timeEditable"); 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return false;
+    }
+	
+	public void createPost(String author, String title, String body, String timeEffort, boolean titleE, boolean bodyE, boolean timeE) {
+		
+		String query = "INSERT INTO Posts (author, postTitle, postBody, timeEffort, titleEditable, bodyEditable, timeEditable) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, author);
+			pstmt.setString(2, title);
+			pstmt.setString(3, body);
+			pstmt.setString(4, timeEffort);
+			pstmt.setBoolean(5, titleE);
+			pstmt.setBoolean(6, bodyE);
+			pstmt.setBoolean(7, timeE);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("createPost failed: " + e.getMessage());
+		}
+	}
+	
+	public void updateTitle(String title, int ID) {
+		String query =
+                "UPDATE Posts SET postTitle = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, title);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	public void updateBody(String Body, int ID) {
+		String query =
+                "UPDATE Posts SET postBody = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, Body);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	public void updateTimeEffort(String TimeEffort, int ID) {
+		String query =
+                "UPDATE Posts SET timeEffort = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, TimeEffort);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void deletePost(int ID) {
+	    String query = "DELETE FROM Posts WHERE ID = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, ID);
+	        pstmt.executeUpdate();
+	        	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void updateBodyEditing(boolean allowEditing, int ID) {
+		String query =
+                "UPDATE Posts SET bodyEditable = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setBoolean(1, allowEditing);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void updateTitleEditing(boolean allowEditing, int ID) {
+		String query =
+                "UPDATE Posts SET titleEditable = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setBoolean(1, allowEditing);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void updateTimeEditing(boolean allowEditing, int ID) {
+		String query =
+                "UPDATE Posts SET timeEditable = ? "
+                + "WHERE ID = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setBoolean(1, allowEditing);
+            pstmt.setInt(2, ID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+
+	
 	
 	// Attribute getters for the current user
 	/*******
@@ -1169,14 +1390,14 @@ public class Database {
 
 	
 	/*******
-	 * <p> Method: boolean getCurrentNewRole1() </p>
+	 * <p> Method: boolean getCurrentContributorRole() </p>
 	 * 
 	 * <p> Description: Get the current user's Student role attribute.</p>
 	 * 
 	 * @return true if this user plays a Student role, else false
 	 *  
 	 */
-	public boolean getCurrentNewRole1() { return currentNewRole1;};
+	public boolean getCurrentContributorRole() { return currentContributorRole;};
 
 	
 	/*******
@@ -1193,7 +1414,7 @@ public class Database {
 	/*******
 	 * <p> Debugging method</p>
 	 * 
-	 * <p> Description: Debugging method that dumps the database of the console.</p>
+	 * <p> Description: Debugging method that dumps the base of the console.</p>
 	 * 
 	 * @throws SQLException if there is an issues accessing the database.
 	 * 

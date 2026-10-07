@@ -106,6 +106,7 @@ public class ViewAdminHome {
 	protected static Button button_DeleteUser = new Button("Delete a User");
 	protected static Button button_ListUsers = new Button("List All Users");
 	protected static Button button_AddRemoveRoles = new Button("Add/Remove Roles");
+	protected static Button button_viewLessons = new Button("View Lessons");
 	protected static Alert alertNotImplemented = new Alert(AlertType.INFORMATION);
 
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -275,6 +276,12 @@ public class ViewAdminHome {
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.setOnAction((_) -> {ControllerAdminHome.performQuit(); });
 		
+		// GUI Area 6
+		
+		setupButtonUI(button_viewLessons, "Dialog", 16, 250, Pos.CENTER, 320, 270);
+		button_viewLessons.setOnAction((_) -> 
+			{HW2.ViewLessonsAdmin.displayLessonsHome(theStage, theUser);});
+		
 
 		// Account Deletion GUI
 		alertCannotDeleteUser.setTitle("Account Cannot Be Deleted"); // Account cannot be deleted
@@ -302,7 +309,8 @@ public class ViewAdminHome {
     		button_AddRemoveRoles,
     		line_Separator4, 
     		button_Logout,
-    		button_Quit
+    		button_Quit,
+    		button_viewLessons
     		);
 		
 		// With theRootPane set up with the common widgets, it is up to displayAdminHome to show

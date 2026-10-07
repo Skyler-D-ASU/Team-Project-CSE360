@@ -130,7 +130,7 @@ public class ControllerAddRemoveRoles {
 		ViewAddRemoveRoles.addList.add("<Select a role>");
 		if (!theDatabase.getCurrentAdminRole())
 			ViewAddRemoveRoles.addList.add("Admin");
-		if (!theDatabase.getCurrentNewRole1())
+		if (!theDatabase.getCurrentContributorRole())
 			ViewAddRemoveRoles.addList.add("Contributor"); // Role1 = Contributor
 		if (!theDatabase.getCurrentNewRole2())
 			ViewAddRemoveRoles.addList.add("Viewer"); // Role2 = Viewer
@@ -141,7 +141,7 @@ public class ControllerAddRemoveRoles {
 		ViewAddRemoveRoles.removeList.add("<Select a role>");
 		if (theDatabase.getCurrentAdminRole())
 			ViewAddRemoveRoles.removeList.add("Admin");
-		if (theDatabase.getCurrentNewRole1())
+		if (theDatabase.getCurrentContributorRole())
 			ViewAddRemoveRoles.removeList.add("Contributor");
 		if (theDatabase.getCurrentNewRole2())
 			ViewAddRemoveRoles.removeList.add("Viewer");
@@ -158,7 +158,7 @@ public class ControllerAddRemoveRoles {
 		}
 		
 		// Roles 1 - It could be at the head of the list or later in the list
-		if (theDatabase.getCurrentNewRole1()) {
+		if (theDatabase.getCurrentContributorRole()) {
 			if (notTheFirst)
 				theCurrentRoles += ", Contributor"; 
 			else {
@@ -239,7 +239,7 @@ public class ControllerAddRemoveRoles {
 			}
 			else if (ViewAddRemoveRoles.theAddRole.compareTo("Contributor") == 0) { 
 				// Contributor = Role1
-				if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, "Role1", "true") ) {
+				if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, "Contributor", "true") ) {
 					ViewAddRemoveRoles.combobox_SelectRoleToAdd = new ComboBox <String>();
 					ViewAddRemoveRoles.combobox_SelectRoleToAdd.setItems(FXCollections.
 						observableArrayList(ViewAddRemoveRoles.addList));
@@ -286,7 +286,7 @@ public class ControllerAddRemoveRoles {
 		if (theDatabase.getCurrentAdminRole()) {
 			numRoles++;
 		}
-		if (theDatabase.getCurrentNewRole1()) {
+		if (theDatabase.getCurrentContributorRole()) {
 			numRoles++;
 		}
 		if (theDatabase.getCurrentNewRole2()) {
@@ -337,7 +337,7 @@ public class ControllerAddRemoveRoles {
 				}
 				else if (ViewAddRemoveRoles.theRemoveRole.compareTo("Contributor") == 0) { 
 					// Contributor = Role1
-					if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, "Role1", "false") ) {
+					if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, "Contributor", "false") ) {
 						ViewAddRemoveRoles.combobox_SelectRoleToRemove = new ComboBox <String>();
 						ViewAddRemoveRoles.combobox_SelectRoleToRemove.setItems(FXCollections.
 							observableArrayList(ViewAddRemoveRoles.addList));
