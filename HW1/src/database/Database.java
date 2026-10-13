@@ -238,7 +238,7 @@ public class Database {
  *  <p> Method: List getUserList() </p>
  *  
  *  <P> Description: Generate an List of Strings, one for each user in the database,
- *  starting with "<Select User>" at the start of the list. </p>
+ *  starting with "Select User" at the start of the list. </p>
  *  
  *  @return a list of userNames found in the database.
  */
@@ -257,7 +257,14 @@ public class Database {
 //		System.out.println(userList);
 		return userList;
 	}
-	
+	/**
+     * <p> Method: getAllUsers </p>
+     *
+     * <p> Description: fetches all users stored in database</p>
+     *
+     * @return a list of all users as user objects
+     *
+     */
 	public List<User> getAllUsers(){
 		
 		List<User> users = new ArrayList<User>();
@@ -1002,9 +1009,9 @@ public class Database {
 	}
 	
 	 /**
-     * </p> Method: public boolean setOneTimePassword(String username, String oneTimePassword) </p>
+     * <p> Method: public boolean setOneTimePassword(String username, String oneTimePassword) </p>
      * 
-     * </p> Description: Create a one-time password for the selected user. </p>
+     * <p> Description: Create a one-time password for the selected user. </p>
      *
      * @param username the username whose password will be updated
      * @param oneTimePassword the one-time password
@@ -1094,7 +1101,14 @@ public class Database {
         }
     }
 	
-
+    /**
+     * <p> Method: getAllPosts </p>
+     *
+     * <p> Description: Iterates through database collecting all posts.</p>
+    
+     * @return List of lessonPost Objects
+     */
+    
     public List<lessonPost> getAllPosts() {
         String query =
         		"SELECT ID, author, postTitle, postBody, timeEffort, titleEditable ,bodyEditable, timeEditable FROM Posts";
@@ -1132,6 +1146,16 @@ public class Database {
         
     }
     
+    /**
+     * <p> Method: isPostBodyEditable </p>
+     *
+     * <p> Description: returns if a post body is editable.</p>
+     *
+     * @param ID the unique int identifier for post
+
+     * @return true if editable
+     */
+    
     public boolean isPostBodyEditable(int ID) {
 		String query = "SELECT bodyEditable FROM Posts WHERE ID = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1145,6 +1169,15 @@ public class Database {
 	    }
 		return false;
 	}
+    /**
+     * <p> Method: isPostTitleEditable </p>
+     *
+     * <p> Description: returns if a post title is editable.</p>
+     *
+     * @param ID the unique int identifier for post
+
+     * @return true if editable
+     */
     
     public boolean isPostTitleEditable(int ID) {
 		String query = "SELECT titleEditable FROM Posts WHERE ID = ?";
@@ -1160,6 +1193,15 @@ public class Database {
 	    }
 		return false;
     }
+    /**
+     * <p> Method: isPostTimeEditable </p>
+     *
+     * <p> Description: returns if a posttime is editable.</p>
+     *
+     * @param ID the unique int identifier for post
+
+     * @return true if editable
+     */
     
     public boolean isPostTimeEditable(int ID) {
 		String query = "SELECT timeEditable FROM Posts WHERE ID = ?";
@@ -1175,6 +1217,21 @@ public class Database {
 	    }
 		return false;
     }
+    
+    /**
+     * <p> Method: createPost </p>
+     *
+     * <p> Description: creates a new post in the database.</p>
+     *
+     * @param author the author of the post
+     * @param title the title of the post
+     * @param body the body of the post
+     * @param timeEffort the timeEffort section of post
+     * @param titleE is title Editable?
+     * @param bodyE is body Editable?
+     * @param timeE is time field Editable?
+     *
+     */
 	
 	public void createPost(String author, String title, String body, String timeEffort, boolean titleE, boolean bodyE, boolean timeE) {
 		
@@ -1192,7 +1249,15 @@ public class Database {
 			System.err.println("createPost failed: " + e.getMessage());
 		}
 	}
-	
+	/**
+     * <p> Method: updateTitle </p>
+     *
+     * <p> Description: Updates an existing posts title.</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param title the title of the post
+     *
+     */
 	public void updateTitle(String title, int ID) {
 		String query =
                 "UPDATE Posts SET postTitle = ? "
@@ -1208,6 +1273,15 @@ public class Database {
             e.printStackTrace();
         }
 	}
+	/**
+     * <p> Method: updateBody </p>
+     *
+     * <p> Description: Updates an existing posts Body.</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param Body the body of the post
+     *
+     */
 	public void updateBody(String Body, int ID) {
 		String query =
                 "UPDATE Posts SET postBody = ? "
@@ -1223,6 +1297,16 @@ public class Database {
             e.printStackTrace();
         }
 	}
+	
+	/**
+     * <p> Method: updateTimeEffort </p>
+     *
+     * <p> Description: Updates an existing posts time/Effort Section.</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param TimeEffort the TimeEffort of the post
+     *
+     */
 	public void updateTimeEffort(String TimeEffort, int ID) {
 		String query =
                 "UPDATE Posts SET timeEffort = ? "
@@ -1238,7 +1322,14 @@ public class Database {
             e.printStackTrace();
         }
 	}
-	
+	/**
+     * <p> Method: deletePost </p>
+     *
+     * <p> Description: Deletes an existing post.</p>
+     *
+     * @param ID the unique int identifier for post
+     *
+     */
 	public void deletePost(int ID) {
 	    String query = "DELETE FROM Posts WHERE ID = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1249,7 +1340,15 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-	
+	/**
+     * <p> Method: updateBodyEditing </p>
+     *
+     * <p> Description: updates the boolean of whether the body is editable</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param allowEditing should editing be allowed (false = no, true = yes)
+     *
+     */
 	public void updateBodyEditing(boolean allowEditing, int ID) {
 		String query =
                 "UPDATE Posts SET bodyEditable = ? "
@@ -1265,7 +1364,15 @@ public class Database {
             e.printStackTrace();
         }
 	}
-	
+	/**
+     * <p> Method: updateTitleEditing </p>
+     *
+     * <p> Description: updates the boolean of whether the title is editable</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param allowEditing should editing be allowed (false = no, true = yes)
+     *
+     */
 	public void updateTitleEditing(boolean allowEditing, int ID) {
 		String query =
                 "UPDATE Posts SET titleEditable = ? "
@@ -1281,7 +1388,15 @@ public class Database {
             e.printStackTrace();
         }
 	}
-	
+	/**
+     * <p> Method: updateTimeEditing </p>
+     *
+     * <p> Description: updates the boolean of whether the time is editable</p>
+     *
+     * @param ID the unique int identifier for post
+     * @param allowEditing should editing be allowed (false = no, true = yes)
+     *
+     */
 	public void updateTimeEditing(boolean allowEditing, int ID) {
 		String query =
                 "UPDATE Posts SET timeEditable = ? "

@@ -119,7 +119,7 @@ public class ViewAdminHome {
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
 	
-	// GUI prompt for removing users.
+	/** GUI prompt for removing users. */
 	public static TextInputDialog RemovingUserPrompt = new TextInputDialog("");
 
 	

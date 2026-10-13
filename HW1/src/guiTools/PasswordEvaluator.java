@@ -1,39 +1,49 @@
 package guiTools;
 
 
-public class PasswordEvaluator {
-	/**
-	 * <p> Title: FSM-translated PasswordEvaluator. </p>
-	 * 
-	 * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
-	 * diagram into an executable Java program using the Password Evaluator. The code 
-	 * detailed design is based on a while loop with a select list.</p>
-	 * 
-	 * <p> Copyright: Lynn Robert Carter © 2025 </p>
-	 * 
-	 * @author Lynn Robert Carter
-	 * 
-	 * @version 2.00	2026-09-18 Modified by Kimberly Kasonic, leveraging the
-	 * 							   PasswordEvaluationTestbed-F26 written by 
-	 *                             Lynn Robert Carter for CSE360 Team Project.
-	 * 
-	 */
+/**
+ * <p> Title: FSM-translated PasswordEvaluator. </p>
+ * 
+ * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
+ * diagram into an executable Java program using the Password Evaluator. The code 
+ * detailed design is based on a while loop with a select list.</p>
+ * 
+ * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * 
+ * @author Lynn Robert Carter
+ * 
+ * @version 2.00	2026-09-18 Modified by Kimberly Kasonic, leveraging the
+ * 							   PasswordEvaluationTestbed-F26 written by 
+ *                             Lynn Robert Carter for CSE360 Team Project.
+ * 
+ */
 
+public class PasswordEvaluator {
+	/** Default Constructor */
+	public PasswordEvaluator() {}
 	/*-********************************************************************************************
 	 * 
 	 * Attributes used by the Finite State Machine to inform the user about what was and was not
 	 * valid and point to the character of the error.  This will enhance the user experience.
 	 * 
 	 */
-
-	public static String passwordErrorMessage = "";		// The error message text
-	public static String passwordInput = "";			// The input being processed
-	public static int passwordIndexofError = -1;		// The index where the error was located
+	/** The error message text */
+	public static String passwordErrorMessage = "";		
+	/** The input being processed */
+	public static String passwordInput = "";
+	/** The index where the error was located */
+	public static int passwordIndexofError = -1;	
+	/** Default Bool setup */
 	public static boolean foundUpperCase = false;
+	/** Default Bool setup */
 	public static boolean foundLowerCase = false;
+	/** Default Bool setup */
 	public static boolean foundNumericDigit = false;
+	/** Default Bool setup */
 	public static boolean foundSpecialChar = false;
+	/** Default Bool setup */
 	public static boolean foundLongEnough = false;
+	/** Default Bool setup */
 	public static boolean foundShortEnough = false;
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line

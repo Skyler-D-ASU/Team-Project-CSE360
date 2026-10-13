@@ -16,5 +16,6 @@ package guiFirstAdmin;
  */
 
 public class ModelFirstAdmin {
-
+	/** Default Constructor */
+	public ModelFirstAdmin() {}
 }

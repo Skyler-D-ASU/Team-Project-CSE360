@@ -22,19 +22,26 @@ import entityClasses.User;
 
 
 public class DummyAccountGeneration {
+	/**
+	 * Default Constructor
+	 */
+	public DummyAccountGeneration() {}
+	/** Default Setup for database */
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	/** static list of names to create new users with */
 	public static String[] dummyUserList = {"Fred", "Johnny", "Marilin", "Kindle", "John_Rover", "Admin", "Kim", "Jeremy", "Matthew", "Nicholas"};
+	/** Is this user an admin? */
 	public static boolean admin = false;
 	
-
-	public static void createDummyUsers() {
-		/**********
-		 * <p> Method: dummyUserList() </p>
-		 * 
-		 * <p> Description: This method is only ran to generate a list of dummy account 
-		 * to speed up feature testing</p>
-		 * 
-		 */
+	/**********
+	 * <p> Method: dummyUserList() </p>
+	 * 
+	 * <p> Description: This method is only ran to generate a list of dummy account 
+	 * to speed up feature testing</p>
+	 * 
+	 */
+	
+	public static void eacrteDummyUsers() {
 		
 			for (int i = 0; i < dummyUserList.length; i++) {
 				

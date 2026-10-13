@@ -14,5 +14,8 @@ package guiSetOneTimePassword;
  */
 
 public class ModelSetOneTimePassword {
-
+	/**
+	 * Default Constructor
+	 */
+	public ModelSetOneTimePassword() {}
 }

@@ -26,7 +26,7 @@ import passwordRecognizer.PasswordRecognizer;
 
 public class ControllerSetOneTimePassword {
 
-	//Default Constructor is not used.
+	/** Default Constructor is not used. */
 	public ControllerSetOneTimePassword() {
 	}
 	

@@ -1,48 +1,58 @@
 package guiTools;
-
+/**
+ * <p> Title: FSM-translated EmailAddressRecognizer. </p>
+ * 
+ * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
+ * diagram into an executable Java program using the Email Address Recognizer. The code 
+ * detailed design is based on a while loop with a select list</p>
+ * 
+ * <p> Copyright: Lynn Robert Carter © 2022 </p>
+ * 
+ * @author Lynn Robert Carter
+ * 
+ * @version 0.00		2018-02-04	Initial baseline 
+ * @version 2.00		2022-01-06	Rewritten to recognize email addresses and enhanced
+ * 										to support FSM with up through 999 states for the 
+ * 										trace output to align nicely
+ * @version 3.00		2022-03-22	Adjusted to clean up the code and resolving alignment
+ * 										issues with the design and to correct the issue
+ * 										with an empty email address
+ * 
+ */
 
 public class EmailAddressRecognizer {
-	/**
-	 * <p> Title: FSM-translated EmailAddressRecognizer. </p>
-	 * 
-	 * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
-	 * diagram into an executable Java program using the Email Address Recognizer. The code 
-	 * detailed design is based on a while loop with a select list</p>
-	 * 
-	 * <p> Copyright: Lynn Robert Carter © 2022 </p>
-	 * 
-	 * @author Lynn Robert Carter
-	 * 
-	 * @version 0.00		2018-02-04	Initial baseline 
-	 * @version 2.00		2022-01-06	Rewritten to recognize email addresses and enhanced
-	 * 										to support FSM with up through 999 states for the 
-	 * 										trace output to align nicely
-	 * @version 3.00		2022-03-22	Adjusted to clean up the code and resolving alignment
-	 * 										issues with the design and to correct the issue
-	 * 										with an empty email address
-	 * 
-	 */
-
+	/** Default Constructor */
+	public EmailAddressRecognizer() {}
 	/**********************************************************************************************
 	 * 
 	 * Result attributes to be used for GUI applications where a detailed error message and a 
 	 * pointer to the character of the error will enhance the user experience.
 	 * 
 	 */
-
-	public static String emailAddressErrorMessage = "";	// The error message text
-	public static String emailAddressInput = "";		// The input being processed
-	public static int emailAddressIndexofError = -1;	// The index where the error was located
-	private static int state = 0;						// The current state value
-	private static int nextState = 0;					// The next state value
-	private static boolean finalState = false;			// Is this state a final state?
-	private static String inputLine = "";				// The input line
-	private static char currentChar;					// The current character in the line
-	private static int currentCharNdx;					// The index of the current character
-	private static boolean running;						// The flag that specifies if the FSM is 
-														// running
+	/** The error message text*/
+	public static String emailAddressErrorMessage = "";	
+	/** The input being processed*/
+	public static String emailAddressInput = "";		
+	/** The index where the error was located*/
+	public static int emailAddressIndexofError = -1;	
+	/** The current state value*/
+	private static int state = 0;						
+	/** The next state value*/
+	private static int nextState = 0;					
+	/** Is this state a final state?*/
+	private static boolean finalState = false;		
+	/** The input line*/
+	private static String inputLine = "";				
+	/** The current character in the line*/
+	private static char currentChar;					
+	/** The index of the current character*/
+	private static int currentCharNdx;					
+	/** The flag that specifies if the FSM is running*/
+	private static boolean running;						
+	/** current character to return int*/										
 	private static int charNdxReturn;
-	private static int domainPartCounter = 0;			// A domain name may not exceed 63 characters
+	/** A domain name may not exceed 63 characters*/
+	private static int domainPartCounter = 0;			
 
 	/**********
 	 * This private method display the input line and then on a line under it displays an up arrow

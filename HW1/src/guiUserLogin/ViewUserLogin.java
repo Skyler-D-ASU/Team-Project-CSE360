@@ -62,18 +62,25 @@ public class ViewUserLogin {
 
 	private static Stage theStage;	
 	private static Pane theRootPane;
+	/**
+	 * Sets user login scene to null
+	 */
 	public static Scene theUserLoginScene = null;	
 
+	/**
+	 * private static guiUserLogin.ControllerUserLogin theController;
+	 */
+	private static ViewUserLogin theView = null;	
 
-	private static ViewUserLogin theView = null;	//	private static guiUserLogin.ControllerUserLogin theController;
 
-
-	/*-********************************************************************************************
-
-	Constructor
-
-	 *********************************************************************************************/
-
+	/**********
+	 * <p> Method: displayUserLogin(Stage ps) </p>
+	 * 
+	 * <p> Description: This method displays user login page
+	 * 
+	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
+	 *
+	 */
 	public static void displayUserLogin(Stage ps) {
 		
 		// Establish the references to the GUI. There is no current user yet.

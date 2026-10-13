@@ -16,15 +16,24 @@ package passwordRecognizer;
  */
 
 public class PasswordRecognizer {
-
-	public static String passwordErrorMessage = ""; //Error Message
+	/** Default Constructor*/
+	public PasswordRecognizer() {}
+	/** Error Message*/
+	public static String passwordErrorMessage = "";
+	/** Setup input*/
 	public static String passwordInput = ""; //
+	/** Setup error index*/
 	public static int passwordIndexofError = -1; //
-	public static boolean foundUpperCase = false; // UpperCase condition
-	public static boolean foundLowerCase = false; // LowerCase conditon
-	public static boolean foundNumericDigit = false; // NumericDigit condition
-	public static boolean foundSpecialChar = false; // SpecialCharacter condition
-	public static boolean foundLongEnough = false; // LongEnough condition
+	/** UpperCase condition*/
+	public static boolean foundUpperCase = false; 
+	/** LowerCase condition*/
+	public static boolean foundLowerCase = false; 
+	/** NumericDigit condition*/
+	public static boolean foundNumericDigit = false;
+	/** SpecialCharacter condition*/
+	public static boolean foundSpecialChar = false; 
+	/** LongEnough condition*/
+	public static boolean foundLongEnough = false;
 	private static String inputLine = ""; //
 	private static char currentChar; // Current character
 	private static int currentCharNdx; // Current character index
@@ -32,7 +41,14 @@ public class PasswordRecognizer {
 	
 	private static final int MAX_PASSWORD_LENGTH = 32;
 	
-	
+	/**
+	 * <p> evaluatePassword(String input) Method </p>
+	 * 
+	 * <p> Evaluates the password and returns a string based if it passes/fails. </p>
+	 * 
+	 * @param input string input
+	 * @return errmsg String
+	 */
 	public static String evaluatePassword(String input) {
 		// The following are the local variable used to perform the Directed Graph simulation
 		passwordErrorMessage = "";

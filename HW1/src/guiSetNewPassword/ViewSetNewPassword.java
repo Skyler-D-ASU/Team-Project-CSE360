@@ -15,7 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 /**
- * </p> Title: ViewSetNewPassword Class </p>
+ * <p> Title: ViewSetNewPassword Class </p>
  *
  * <p> Description: This class provides the JavaFX user interface for a user
  * to create a new password. </p>
@@ -26,6 +26,10 @@ import javafx.scene.control.Alert.AlertType;
  */
 
 public class ViewSetNewPassword {
+	/**
+	 * Constructor
+	 */
+	public ViewSetNewPassword() {}
 	//Window Dimensions
 		private static double width =
 				applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -68,6 +72,11 @@ public class ViewSetNewPassword {
 		protected static Scene theSetNewPasswordScene = new Scene(theRootPane, width, height);
 		protected static Button returnButton = new Button("Return");
 		
+		/**
+		 * <p> Display for new password </p>
+		 * @param ps: Takes in a stage
+		 * @param user: Takes in a User
+		 */
 		public static void displaySetNewPassword(Stage ps, User user) {
 			
 			theStage = ps;
@@ -145,3 +154,4 @@ public class ViewSetNewPassword {
 			l.setLayoutY(y);
 		}
 }
+

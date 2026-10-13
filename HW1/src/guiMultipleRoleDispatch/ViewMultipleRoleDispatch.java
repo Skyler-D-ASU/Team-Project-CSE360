@@ -89,6 +89,17 @@ public class ViewMultipleRoleDispatch {
 	Constructor
 
 	 */
+	
+	/**********
+	 * <p> Method:displayMultipleRoleDispatch() </p>
+	 * 
+	 * <p> Description: This method displays the multiple role dispatch. </p>
+	 * 
+	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
+	 * 
+	 * @param user specifies the User for this GUI and it's methods
+	 * 
+	 */
 
 	public static void displayMultipleRoleDispatch(Stage ps, User user) {
 		

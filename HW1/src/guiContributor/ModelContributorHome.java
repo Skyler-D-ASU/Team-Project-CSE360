@@ -1,7 +1,4 @@
 package guiContributor;
-
-public class ModelContributorHome {
-
 /*******
  * <p> Title: ModelRole1Home Class. </p>
  * 
@@ -17,5 +14,8 @@ public class ModelContributorHome {
  * @version 1.01		2025-09-13 Updated JavaDoc description
  *  
  */
+public class ModelContributorHome {
 
+	/** Default Constructor */
+	public ModelContributorHome() {}
 }

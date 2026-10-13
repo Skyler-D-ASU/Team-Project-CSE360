@@ -100,8 +100,8 @@ public class ViewAddRemoveRoles {
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current user of the application
-	
-	public static Scene theAddRemoveRolesScene = null;	// The Scene each invocation populates
+	/** The Scene each invocation populates */
+	public static Scene theAddRemoveRolesScene = null;	
 	protected static String theSelectedUser = "";	// The user whose roles are being updated
 	protected static String theAddRole = "";		// The role being added
 	protected static String theRemoveRole = "";		// The roles being removed
@@ -165,7 +165,7 @@ public class ViewAddRemoveRoles {
 	 * This method determines the location, size, font, color, and change and event handlers for
 	 * each GUI object. </p>
 	 * 
-	 * This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
+	 * <p> This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
 	 * fields using the displayAddRempoveRoles method.</p>
 	 * 
 	 */

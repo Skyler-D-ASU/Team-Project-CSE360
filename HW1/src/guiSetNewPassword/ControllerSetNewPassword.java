@@ -5,7 +5,7 @@ import database.Database;
 import passwordRecognizer.PasswordRecognizer;
 
 /**
- * </p> Title: ControllerSetNewPassword Class </p>
+ * <p> Title: ControllerSetNewPassword Class </p>
  *
  * <p> Description: This class provides the functionally of creating
  * a new password and return the user back to the login page. </p>
@@ -16,7 +16,8 @@ import passwordRecognizer.PasswordRecognizer;
  */
 
 public class ControllerSetNewPassword {
-	 
+	/** Default Constructor */
+	public ControllerSetNewPassword() {}
 	private static Database theDatabase = FoundationsMain.database;
 
 	    protected static void performSetPassword() {

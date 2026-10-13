@@ -56,6 +56,16 @@ public class User {
      * 
      * @param r3 specifies the the Reviewer attribute (TRUE or FALSE) for this user
      * 
+     * @param fn specifies the account first name for this user
+     * 
+     * @param mn specifies the account middle name for this user
+     * 
+     * @param ln specifies the account last name for this user
+     * 
+     * @param pfn specifies the account preferred first name for this user
+     * 
+     * @param ea specifies the account email for this user
+     * 
      */
     // Constructor to initialize a new User object with userName, password, and role.
     public User(String userName, String password, String fn, String mn, String ln, String pfn, 
@@ -198,12 +208,26 @@ public class User {
     // Gets the current value of the Student role attribute.
     public String getEmailAddress() { return emailAddress; }
 
+    /** Sets User name method 
+     * @param s takes in a string user name*/
     public void setUserName(String s) { userName = s; }
+    /** Sets Password method 
+     *  @param s takes in a string password*/
     public void setPassword(String s) { password = s; }
+    /** Sets First Name method 
+     *  @param s takes in a string first name*/
     public void setFirstName(String s) { firstName = s; }
+    /** Sets Middle Name method 
+     *  @param s takes in a string middle name*/
     public void setMiddleName(String s) { middleName = s; }
+    /** Sets Last Name method 
+     *  @param s takes in a string last name*/
     public void setLastName(String s) { lastName = s; }
+    /** Sets Preferred first name method 
+     *  @param s takes in a string preferred first name*/
     public void setPreferredFirstName(String s) { preferredFirstName = s; }
+    /** Sets Email address method 
+     *  @param s takes in a string email address name*/
     public void setEmailAddress(String s) { emailAddress = s; }
 
     

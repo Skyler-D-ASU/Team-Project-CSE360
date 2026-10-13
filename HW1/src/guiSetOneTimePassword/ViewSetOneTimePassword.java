@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 /**
- * </p> Title: ViewSetOneTimePassword Class </p>
+ * <p> Title: ViewSetOneTimePassword Class </p>
  *
  * <p> Description: This class provides the JavaFX user interface for an administrator
  * to set a one-time password for an existing user.
@@ -32,7 +32,10 @@ import javafx.scene.control.Alert.AlertType;
  */
 
 public class ViewSetOneTimePassword {
-	
+	/**
+	 * Default Constructor
+	 */
+	public ViewSetOneTimePassword() {}
 	//Window Dimensions
 	private static double width =
 			applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -77,6 +80,14 @@ public class ViewSetOneTimePassword {
 	protected static ComboBox<String> combobox_SelectUser = new ComboBox<String>();
 	
 	//Setting Up Drop-box to display a list of all users.
+	
+	/**
+	 * <p> Title: setupUserComboBox() Method </p>
+	 *
+	 * <p> Description: Builds a ComboBox UI object </p>
+	 * 
+	 */
+
 	public static void setupUserComboBox() {
 		List<String> userList = theDatabase.getUserList();
 		
@@ -97,6 +108,18 @@ public class ViewSetOneTimePassword {
 	protected static Pane theRootPane = new Pane();
 	protected static Scene theSetOneTimePasswordScene = new Scene(theRootPane, width, height);
 	protected static Button returnButton = new Button("Return");
+	
+	/**
+	 * <p> Title: displaySetOneTimePassword(Stage ps, User user) Method </p>
+	 *
+	 * <p> Description: Builds a ComboBox UI object </p>
+	 * 
+	 * @param ps takes in stage
+	 * 
+	 * @param user takes in user
+	 * 
+	 */
+
 	
 	public static void displaySetOneTimePassword(Stage ps, User user) {
 		
