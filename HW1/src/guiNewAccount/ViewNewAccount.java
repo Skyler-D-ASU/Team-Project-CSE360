@@ -138,7 +138,7 @@ public class ViewNewAccount {
 		
     	// Place all of the established GUI elements into the pane
     	theRootPane.getChildren().clear();
-    	theRootPane.getChildren().addAll(label_NewUserCreation, label_NewUserLine, text_Username,
+    	theRootPane.getChildren().addAll(label_ApplicationTitle, label_NewUserCreation, label_NewUserLine, text_Username,
     			text_Password1, text_Password2, button_UserSetup, button_Quit);    	
 
 		// Set the title for the window, display the page, and wait for the Admin to do something
@@ -162,26 +162,28 @@ public class ViewNewAccount {
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
 		theNewAccountScene = new Scene(theRootPane, width, height);
-
-		// Label the Panle with the name of the startup screen, centered at the top of the pane
-		setupLabelUI(label_ApplicationTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
+		
+		theRootPane.setStyle("-fx-background-color: #1A1A1A");
+		
+		// Label the Panel with the name of the startup screen, centered at the top of the pane
+		setupLabelUI(label_ApplicationTitle, "Franklin Gothic Heavy", 32, width, Pos.CENTER, 0, 10, "white");
 		
     	// Label to display the welcome message for the new user
-    	setupLabelUI(label_NewUserCreation, "Arial", 32, width, Pos.CENTER, 0, 10);
+    	setupLabelUI(label_NewUserCreation, "Franklin Gothic Demi", 28, width, Pos.CENTER, 0, 60, "#9885FF");
 	
     	// Label to display the  message for the first user
-    	setupLabelUI(label_NewUserLine, "Arial", 24, width, Pos.CENTER, 0, 70);
+    	setupLabelUI(label_NewUserLine, "Franklin Gothic Medium", 24, width, Pos.CENTER, 0, 120, "#0080FF");
 		
 		// Establish the text input operand asking for a username
-		setupTextUI(text_Username, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 160, true);
+		setupTextUI(text_Username, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 175, true);
 		text_Username.setPromptText("Enter the Username");
 		
 		// Establish the text input operand field for the password
-		setupTextUI(text_Password1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
+		setupTextUI(text_Password1, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 225, true);
 		text_Password1.setPromptText("Enter the Password");
 		
 		// Establish the text input operand field to confirm the password
-		setupTextUI(text_Password2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, true);
+		setupTextUI(text_Password2, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 275, true);
 		text_Password2.setPromptText("Enter the Password Again");
 		
 		// If the invitation code is wrong, this alert dialog will tell the user
@@ -195,34 +197,35 @@ public class ViewNewAccount {
 		alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
 				
         // Set up the account creation and login
-        setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
+        setupButtonUI(button_UserSetup, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 475, 225, "white", "#008537");
         button_UserSetup.setOnAction((_) -> {ControllerNewAccount.doCreateUser(); });
 		
         // Enable the user to quit the application
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 300, 540, "white", "#3B3B3B");
         button_Quit.setOnAction((_) -> {ControllerNewAccount.performQuit(); });
 	}
 	
 	
-	/*-********************************************************************************************
+	/*********************************************************************************************
 
 	Helper methods to reduce code length
 
-	 */
-	
+	 *********************************************************************************************/
+
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 */
-	
-	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+
+	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
 		l.setAlignment(p);
 		l.setLayoutX(x);
-		l.setLayoutY(y);		
+		l.setLayoutY(y);	
+		l.setStyle("-fx-text-fill: " + c);
 	}
-	
-	
+
+
 	/**********
 	 * Private local method to initialize the standard fields for a button
 	 * 
@@ -233,13 +236,16 @@ public class ViewNewAccount {
 	 * @param p		The alignment (e.g. left, centered, or right)
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
+	 * @param tc	The text color of the button
+	 * @param bc	The background color of the button
 	 */
-	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y, String tc, String bc){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
 		b.setLayoutX(x);
-		b.setLayoutY(y);		
+		b.setLayoutY(y);
+		b.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + "; -fx-background-radius: 10px;");
 	}
 
 	/**********
@@ -253,5 +259,7 @@ public class ViewNewAccount {
 		t.setLayoutX(x);
 		t.setLayoutY(y);		
 		t.setEditable(e);
+		t.setStyle("-fx-text-fill: white; -fx-background-color: #1A1A1A;"
+				+ " -fx-border-color: grey; -fx-border-width: 2px; -fx-border-radius: 10px;");
 	}	
 }

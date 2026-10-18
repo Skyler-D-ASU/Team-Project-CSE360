@@ -1,5 +1,7 @@
 package HW2;
 
+import entityClasses.User;
+import javafx.stage.Stage;
 
 /*******
  * <p> Title: ControllerRole1Home Class. </p>
@@ -49,6 +51,40 @@ public class ControllerLessons {
 	protected static void performUpdate () {
 		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewLessons.theStage, ViewLessons.theUser);
 	}	
+	
+	/**********
+	 * <p> Method: public goToUserHomePage(Stage theStage, User theUser) </p>
+	 * 
+	 * <p> Description: This method is called when the user has clicked on the button to
+	 * proceed to the user's home page.
+	 * 
+	 * @param theStage specifies the JavaFX Stage for next next GUI page and it's methods
+	 * 
+	 * @param theUser specifies the user so we go to the right page and so the right information
+	 */
+	protected static void goToUserHomePage(Stage theStage, User theUser) {
+		
+		// Get the roles the user selected during login
+		int theRole = applicationMain.FoundationsMain.activeHomePage;
+
+		// Use that role to proceed to that role's home page
+		switch (theRole) {
+		case 1:
+			guiAdminHome.ViewAdminHome.displayAdminHome(theStage, theUser);
+			break;
+		case 2:
+			guiContributor.ViewContributorHome.displayContributorHome(theStage, theUser);
+			break;
+		case 3:
+			guiRole2.ViewRole2Home.displayRole2Home(theStage, theUser);
+			break;
+		default: 
+			System.out.println("*** ERROR *** CreateLesson goToUserHome has an invalid role: " + 
+					theRole);
+			System.exit(0);
+		}
+ 	}
+	
 
 	/**********
 	 * <p> Method: performLogout() </p>

@@ -79,6 +79,7 @@ public class ViewLessonsAdmin {
 	
 	// Alert for posts
 	protected static Alert alertPostInvalid = new Alert(AlertType.INFORMATION);
+	protected static Alert alertFieldLocked = new Alert(AlertType.INFORMATION);
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -400,29 +401,58 @@ public class ViewLessonsAdmin {
 		
 		// Deletion Button
 		
+		// if field is editable, button should start by saying Lock then change to Unlock
 		
-		if (theDatabase.isPostTimeEditable(LP.ID)) { button_LockPostTime.setOnAction((_) -> {theDatabase.updateTimeEditing(false, LP.ID); 
-																							refreshFeed();});
-													button_LockPostTime.setText("Unlock Time");
-		
-		} else {button_LockPostTime.setOnAction((_) -> {theDatabase.updateTimeEditing(true, LP.ID); 
-														refreshFeed();});
-														button_LockPostTime.setText("Lock Time");}
+		if (theDatabase.isPostTimeEditable(LP.ID)) { button_LockPostTime.setOnAction((_) -> {theDatabase.updateTimeEditing(false, LP.ID);
+			alertFieldLocked.setTitle("Field Locked");
+			alertFieldLocked.setHeaderText("Time Editing");
+			alertFieldLocked.setContentText("This field has been locked.");
+			alertFieldLocked.showAndWait();	
+			refreshFeed();});										
+		button_LockPostTime.setText("Lock Time");
+		}
+		else {button_LockPostTime.setOnAction((_) -> {theDatabase.updateTimeEditing(true, LP.ID); 
+			alertFieldLocked.setTitle("Field Unlocked");
+			alertFieldLocked.setHeaderText("Time");
+			alertFieldLocked.setContentText("This field has been unlocked.");
+			alertFieldLocked.showAndWait();											
+			refreshFeed();});
+		button_LockPostTime.setText("Unlock Time");}
 		
 		if (theDatabase.isPostTitleEditable(LP.ID)) { button_LockPostTitle.setOnAction((_) -> {theDatabase.updateTitleEditing(false, LP.ID);  
-																							   refreshFeed();});
-																							   button_LockPostTitle.setText("Unlock Title");
-		
-		} else { button_LockPostTitle.setOnAction((_) -> {theDatabase.updateTitleEditing(true, LP.ID); 
-														  refreshFeed();});
-														  button_LockPostTitle.setText("Lock Title");}
+			alertFieldLocked.setTitle("Field Locked");
+			alertFieldLocked.setHeaderText("Title");
+			alertFieldLocked.setContentText("This field has been locked.");
+			alertFieldLocked.showAndWait();																				   
+			refreshFeed();});																				   
+		button_LockPostTitle.setText("Lock Title");
+		} 
+		else { button_LockPostTitle.setOnAction((_) -> {theDatabase.updateTitleEditing(true, LP.ID); 
+			alertFieldLocked.setTitle("Field Unlocked");
+			alertFieldLocked.setHeaderText("Title");
+			alertFieldLocked.setContentText("This field has been unlocked.");
+			alertFieldLocked.showAndWait();											  
+			refreshFeed();});
+		button_LockPostTitle.setText("Unlock Title");
+		}
 		
 		if (theDatabase.isPostBodyEditable(LP.ID)) { button_LockPostBody.setOnAction((_) -> {theDatabase.updateBodyEditing(false, LP.ID); 
-																							 refreshFeed();});
-		 																					 button_LockPostBody.setText("Unlock Body");
-		} else { button_LockPostBody.setOnAction((_) -> {theDatabase.updateBodyEditing(true, LP.ID);  
-														 refreshFeed();}); 
-														 button_LockPostBody.setText("Lock Body"); }
+			alertFieldLocked.setTitle("Field Locked");
+			alertFieldLocked.setHeaderText("Body");
+			alertFieldLocked.setContentText("This field has been locked.");
+			alertFieldLocked.showAndWait();																				 
+			refreshFeed();});
+		button_LockPostBody.setText("Lock Body");
+		} 
+		else { button_LockPostBody.setOnAction((_) -> {theDatabase.updateBodyEditing(true, LP.ID);  
+			alertFieldLocked.setTitle("Field Unlocked");
+			alertFieldLocked.setHeaderText("Body Editing");
+			alertFieldLocked.setContentText("This field has been unlocked.");
+			alertFieldLocked.showAndWait();												 
+			refreshFeed();}); 
+													 
+		button_LockPostBody.setText("Unlock Body"); 
+		}
 	
 	
 		if (LP.titleEditable && LP.timeEditable && LP.bodyEditable) { button_deletePost.setOnAction((_) -> {theDatabase.deletePost(LP.ID); refreshFeed();});

@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -53,7 +54,7 @@ public class ViewContributorHome {
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
 	// GUI ARea 2: Widget Area
-	protected static Button button_ViewUserStories = new Button("Open User Stories Page");
+	protected static Button button_ViewUserStories = new Button("Open Lessons Page");
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -148,32 +149,38 @@ public class ViewContributorHome {
 		theRootPane = new Pane();
 		theViewContributorHomeScene = new Scene(theRootPane, width, height);	// Create the scene
 		
-		// Set the title for the window
-		
 		// Populate the window with the title and other common widgets and set their static state
 		
+		theRootPane.setStyle("-fx-background-color: #1A1A1A");
+		line_Separator1.setStroke(Color.WHITE);
+		
 		// GUI Area 1
+		
+		// Set the title for the window
 		label_PageTitle.setText("Contributor Home Page");
-		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
+		setupLabelUI(label_PageTitle, "Franklin Gothic Heavy", 28, width, Pos.CENTER, 0, 10, "white");
 
 		label_UserDetails.setText("User: " + theUser.getUserName());
-		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
+		setupLabelUI(label_UserDetails, "Franklin Gothic Demi", 20, width, Pos.BASELINE_LEFT, 20, 55, "#9885FF");
 		
-		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
+		setupButtonUI(button_UpdateThisUser, "Franklin Gothic Demi", 18, 170, Pos.CENTER, 610, 45, "white", "#0080FF");
 		button_UpdateThisUser.setOnAction((_) -> {ControllerContributorHome.performUpdate(); });
 		
 		// GUI Area 2
 		
-		setupButtonUI(button_ViewUserStories, "Dialog", 50, 100, Pos.CENTER, 100, 125);
+		setupButtonUI(button_ViewUserStories, "Franklin Gothic Demi", 28, 100, Pos.CENTER, 235, 125, "white", "#008537");
 		button_ViewUserStories.setOnAction((_) -> { HW2.ViewLessons.displayLessonsHome(theStage, theUser);});
 		
 		
 		
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		
+		line_Separator4.setStroke(Color.WHITE);
+		
+        setupButtonUI(button_Logout, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 100, 540, "white", "#3B3B3B");
         button_Logout.setOnAction((_) -> {ControllerContributorHome.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 450, 540, "white", "#3B3B3B");
         button_Quit.setOnAction((_) -> {ControllerContributorHome.performQuit(); });
 
 		// This is the end of the GUI initialization code
@@ -185,33 +192,26 @@ public class ViewContributorHome {
 }
 	
 	
-	/*-********************************************************************************************
+	/*********************************************************************************************
 
 	Helper methods to reduce code length
 
-	 */
-	
+	 *********************************************************************************************/
+
 	/**********
 	 * Private local method to initialize the standard fields for a label
-	 * 
-	 * @param l		The Label object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
 	 */
-	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, 
-			double y){
+
+	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
 		l.setAlignment(p);
 		l.setLayoutX(x);
-		l.setLayoutY(y);		
+		l.setLayoutY(y);	
+		l.setStyle("-fx-text-fill: " + c);
 	}
-	
-	
+
+
 	/**********
 	 * Private local method to initialize the standard fields for a button
 	 * 
@@ -222,13 +222,15 @@ public class ViewContributorHome {
 	 * @param p		The alignment (e.g. left, centered, or right)
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
+	 * @param tc	The text color of the button
+	 * @param bc	The background color of the button
 	 */
-	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, 
-			double y){
+	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y, String tc, String bc){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
 		b.setLayoutX(x);
-		b.setLayoutY(y);		
+		b.setLayoutY(y);
+		b.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + "; -fx-background-radius: 10px;");
 	}
 }

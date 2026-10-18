@@ -5,19 +5,25 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import database.Database;
 import entityClasses.User;
@@ -70,6 +76,7 @@ public class ViewLessons {
 	// Post display area
 	private VBox LessonsBox = new VBox(15);
 	private ScrollPane LessonsScroll = new ScrollPane(LessonsBox);
+	private boolean currentlyUpdating = false;
 	
 	// Self post
 	private TextArea PostTitle = new TextArea();
@@ -78,12 +85,14 @@ public class ViewLessons {
 	
 	// Alert for posts
 	protected static Alert alertPostInvalid = new Alert(AlertType.INFORMATION);
+	protected static Alert alertDeletePost = new Alert(AlertType.CONFIRMATION);
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
-	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
-	// logging out.
+	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application, 
+	// logging out, and returning to the user's home page.
+	protected static Button button_ReturnToHomePage = new Button("Return");
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
 
@@ -150,7 +159,7 @@ public class ViewLessons {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 				
 		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("CSE 360 Foundations: Contributor Home Page");
+		theStage.setTitle("CSE 360 Foundations: Contributor Lessons Page");
 		theStage.setScene(theViewContributorHomeScene);
 		theStage.show();
 		
@@ -173,47 +182,72 @@ public class ViewLessons {
 		theRootPane = new Pane();
 		theViewContributorHomeScene = new Scene(theRootPane, width, height);	// Create the scene
 		
-		// Set the title for the window
-		
 		// Populate the window with the title and other common widgets and set their static state
 		
+		theRootPane.setStyle("-fx-background-color: #1A1A1A");
+		line_Separator1.setStroke(Color.WHITE);
+		
 		// GUI Area 1
+		
+		// Set the title for the window
 		label_PageTitle.setText("Lessons Home Page");
-		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
+		setupLabelUI(label_PageTitle, "Franklin Gothic Heavy", 28, width, Pos.CENTER, 0, 10, "white");
 
 		label_UserDetails.setText("User: " + theUser.getUserName());
-		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
+		setupLabelUI(label_UserDetails, "Franklin Gothic Demi", 20, width, Pos.BASELINE_LEFT, 20, 55, "#9885FF");
 		
-		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
+		setupButtonUI(button_UpdateThisUser, "Franklin Gothic Demi", 18, 170, Pos.CENTER, 610, 45, "white", "#0080FF");
 		button_UpdateThisUser.setOnAction((_) -> {ControllerLessons.performUpdate(); });
 		
 		// GUI Area 2
+		
 		// Will contain fields of threads etc
 		
-		setupButtonUI(button_NewPost, "Dialog", 18, 205, Pos.CENTER, 25, 350);
+		setupButtonUI(button_NewPost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 110, 450, "white", "#008537");
 		
-		button_NewPost.setOnAction((_) -> {Publish();});
+		button_NewPost.setOnAction((_) -> {Publish();
+		refreshFeed();});
 		
 		// Display Area
 		LessonsBox.setPadding(new Insets(8, 8, 8, 0));
 		LessonsScroll.setLayoutX(350);
-		LessonsScroll.setLayoutY(100);
-		LessonsScroll.setMinWidth(425);
-		LessonsScroll.setMaxWidth(440);
+		LessonsScroll.setLayoutY(105);
+		LessonsScroll.setMinWidth(400);
+		LessonsScroll.setMaxWidth(400);
 		LessonsScroll.setMinHeight(400);
 		LessonsScroll.setMaxHeight(400);
 		LessonsScroll.setFitToWidth(true);
+		LessonsScroll.setStyle("-fx-background: #1A1A1A;");
 		
 		// Input Area
 		SetupPostBoxUI(PostTitle, PostBody, timeTakenArea);
-
 		
+		PostTitle.setFont(Font.font("Franklin Gothic Book", 16));
+		PostTitle.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+				+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+				+ "-fx-border-width: 2px;");
+		
+		PostBody.setFont(Font.font("Franklin Gothic Book", 16));
+		PostBody.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+				+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+				+ "-fx-border-width: 2px;");
+		
+		timeTakenArea.setFont(Font.font("Franklin Gothic Book", 16));
+		timeTakenArea.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+				+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+				+ "-fx-border-width: 2px;");
 		
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		
+		line_Separator4.setStroke(Color.WHITE);
+		
+		setupButtonUI(button_ReturnToHomePage, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 50, 540, "white", "#3B3B3B");
+		button_ReturnToHomePage.setOnAction((_) -> {ControllerLessons.goToUserHomePage(theStage, theUser);}	);
+		
+        setupButtonUI(button_Logout, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 300, 540, "white", "#3B3B3B");
         button_Logout.setOnAction((_) -> {ControllerLessons.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 550, 540, "white", "#3B3B3B");
         button_Quit.setOnAction((_) -> {ControllerLessons.performQuit(); });
 
 		// This is the end of the GUI initialization code
@@ -221,89 +255,12 @@ public class ViewLessons {
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_NewPost, LessonsBox, LessonsScroll,
-	        PostBody, PostTitle, timeTakenArea);
+	        line_Separator4, button_ReturnToHomePage, button_Logout, button_Quit, 
+	        button_NewPost, LessonsBox, LessonsScroll, PostBody, PostTitle, timeTakenArea);
          refreshFeed();
-}	
+	}	
 	
 	
-	/*-********************************************************************************************
-
-	Helper methods to reduce code length
-
-	 */
-	private static void SetupPostBoxUI(TextArea Title, TextArea Body, TextArea timeTakenArea ){
-		Title.setMinWidth(100);
-		Title.setMaxWidth(200);
-		Title.setMinHeight(25);
-		Title.setMaxHeight(25);
-		Title.setLayoutX(10);
-		Title.setLayoutY(100);
-		Title.setPrefRowCount(8);
-		Title.setWrapText(true);
-		Title.setPromptText("<Insert Title Information here>");
-		
-		Body.setMinWidth(100);
-		Body.setMaxWidth(200);
-		Body.setLayoutX(10);
-		Body.setLayoutY(135);
-		Body.setPrefRowCount(8);
-		Body.setWrapText(true);
-		Body.setPromptText("<Insert lessons learned body information here>");
-		
-
-		timeTakenArea.setMinWidth(100);
-		timeTakenArea.setMaxWidth(200);
-		timeTakenArea.setMinHeight(25);
-		timeTakenArea.setMaxHeight(25);
-		timeTakenArea.setLayoutX(10);
-		timeTakenArea.setLayoutY(300);
-		timeTakenArea.setPrefRowCount(8);
-		timeTakenArea.setWrapText(true);
-		timeTakenArea.setPromptText("<Insert time taken data here in hours>");
-	}
-	
-	
-	/**********
-	 * Private local method to initialize the standard fields for a label
-	 * 
-	 * @param l		The Label object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
-	 */
-	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, 
-			double y){
-		l.setFont(Font.font(ff, f));
-		l.setMinWidth(w);
-		l.setAlignment(p);
-		l.setLayoutX(x);
-		l.setLayoutY(y);		
-	}
-	
-	
-	/**********
-	 * Private local method to initialize the standard fields for a button
-	 * 
-	 * @param b		The Button object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
-	 */
-	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, 
-			double y){
-		b.setFont(Font.font(ff, f));
-		b.setMinWidth(w);
-		b.setAlignment(p);
-		b.setLayoutX(x);
-		b.setLayoutY(y);		
-	}
 	private void Publish() {
 		String Err[];
 		
@@ -322,6 +279,7 @@ public class ViewLessons {
 			theDatabase.createPost(theDatabase.getCurrentUsername(), t, b, tt, true, true, true);
 			PostTitle.clear();
 			PostBody.clear();
+			timeTakenArea.clear();
 			refreshFeed();
 			}
 	}
@@ -335,84 +293,390 @@ public class ViewLessons {
 				LessonsBox.getChildren().add(createNewPostBox(LP)); }
 			}
 	}
+	
 	private VBox createNewPostBox(lessonPost LP) {
 		VBox newPost = new VBox(8);
 
 		Label AuthorDisplay = new Label("Author: ");
+		setupLabelUI(AuthorDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
 		Label TitleDisplay = new Label("Title: ");
+		setupLabelUI(TitleDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
 		Label BodyDisplay = new Label("Body: ");
+		setupLabelUI(BodyDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
 		Label TimeDisplay = new Label("Time/Effort: ");
-		
+		setupLabelUI(TimeDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
+
+		Button button_updatePost = new Button("Update Post");
+		setupButtonUI(button_updatePost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 30, 30, "white", "#008537");
 		Button button_deletePost = new Button("Delete Post");
-        setupButtonUI(button_deletePost, "Dialog", 18, 15, Pos.CENTER, 30, 30);
+        setupButtonUI(button_deletePost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 30, 30, "white", "#008537");
+        
+        
+        // fields all start as locked/labels until update button is pressed
+        // then check if field is locked/unlocked and change to editable text box
+        // when finished updating, click button and change back to un-editable labels
         
 		//Title Row
 		HBox titleRow = new HBox(8);
-		if (LP.titleEditable) {
-			TextArea title = new TextArea(LP.postTitle);
-			title.getOnInputMethodTextChanged();
-			title.textProperty().addListener((observableTitle, oldValueTitle, newValueTitle) -> {theDatabase.updateTitle(newValueTitle, LP.ID); });
-			title.setMaxSize(200, 65);
-			titleRow.getChildren().addAll(TitleDisplay, title);
-		} else {Label title = new Label(LP.postTitle);
-				titleRow.getChildren().addAll(TitleDisplay, title);}
-	
+		titleRow.setAlignment(Pos.CENTER);
+		
+		Label title = new Label(LP.postTitle);
+		setupLabelUI(title, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+		title.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+		title.setMaxHeight(30);
+		titleRow.getChildren().addAll(TitleDisplay, title);
+		
+		//if (LP.titleEditable) {
+		//	TextArea title = new TextArea(LP.postTitle);
+		//	
+		//	title.getOnInputMethodTextChanged();
+		//	title.textProperty().addListener((observableTitle, oldValueTitle, newValueTitle) -> {theDatabase.updateTitle(newValueTitle, LP.ID); });
+		//	title.setMaxSize(250, 30);
+		//	title.setWrapText(true);
+		//	
+		//	title.setFont(Font.font("Franklin Gothic Book", 16));
+		//	title.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+		//			+ "-fx-border-width: 2px;");
+		//	
+		//	titleRow.getChildren().addAll(TitleDisplay, title);
+		//} else {Label title = new Label(LP.postTitle);
+		//		setupLabelUI(title, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+		//		title.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+		//		title.setMaxHeight(30);
+		//		titleRow.getChildren().addAll(TitleDisplay, title);}
+		//
 			
+		
 		//Author Row
 		HBox authorRow = new HBox(8);
 		Label author = new Label(LP.Author);
+		setupLabelUI(author, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+		author.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+		author.setMaxHeight(30);
+		authorRow.setAlignment(Pos.CENTER);
 		authorRow.getChildren().addAll(AuthorDisplay, author);
 			
 		//Body Row
 		HBox bodyRow = new HBox(8);
-		if (LP.bodyEditable) {
-			TextArea body = new TextArea(LP.postBody);
-			body.textProperty().addListener((observableBody, oldValueBody, newValueBody) -> {theDatabase.updateBody(newValueBody, LP.ID);});
-			body.setMaxSize(200, 100);
-			body.setWrapText(true);
-			bodyRow.getChildren().addAll(BodyDisplay, body);
-		} else { Label body = new Label(LP.postBody);
-				 body.setWrapText(true);
-				 body.setMaxWidth(350);
-				 bodyRow.getChildren().addAll(BodyDisplay, body);}
-
+		bodyRow.setAlignment(Pos.CENTER);
+		
+		TextArea body = new TextArea(LP.postBody);
+		body.setMaxSize(250, 125);
+		body.setWrapText(true);
+		body.setFont(Font.font("Franklin Gothic Book", 16));
+		body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+				+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+				+ "-fx-border-width: 2px;");
+		body.setEditable(false);
+		bodyRow.getChildren().addAll(BodyDisplay, body);
+		
+		//if (LP.bodyEditable) {
+		//	TextArea body = new TextArea(LP.postBody);
+		//	body.textProperty().addListener((observableBody, oldValueBody, newValueBody) -> {theDatabase.updateBody(newValueBody, LP.ID);});
+		//	body.setMaxSize(250, 125);
+		//	body.setWrapText(true);
+		//	body.setFont(Font.font("Franklin Gothic Book", 16));
+		//	body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+		//			+ "-fx-border-width: 2px;");
+		//	
+		//	bodyRow.getChildren().addAll(BodyDisplay, body);
+		//} else { TextArea body = new TextArea(LP.postBody);
+		//	body.setMaxSize(250, 125);
+		//	body.setWrapText(true);
+		//	body.setFont(Font.font("Franklin Gothic Book", 16));
+		//	body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+		//		+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+		//		+ "-fx-border-width: 2px;");
+		//	body.setEditable(false);
+		//	bodyRow.getChildren().addAll(BodyDisplay, body);}
+		//
 			
+		
 		//Time Effort Row
 		HBox timeEffortRow = new HBox(8);
-		if (LP.timeEditable) {
-			TextArea timeEffortTXT = new TextArea(LP.timeEffort);
-			timeEffortTXT.textProperty().addListener((observableTETXT, oldValueTETXT, newValueTETXT) -> {theDatabase.updateTimeEffort(newValueTETXT, LP.ID);});
-			timeEffortTXT.setMaxSize(200, 65);
-			timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);
-		} else {Label timeEffortTXT = new Label(LP.timeEffort);
-				timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);}
+		timeEffortRow.setAlignment(Pos.CENTER);
 		
-		// Deletion Button
-		if (LP.titleEditable && LP.timeEditable && LP.bodyEditable && LP.Author.equals(theDatabase.getCurrentUsername())) {
-			titleRow.getChildren().add(button_deletePost);
-			button_deletePost.setOnAction((_) -> {theDatabase.deletePost(LP.ID); refreshFeed();});
-		} else {
-			button_deletePost.setText("No Permission To Delete Post");
-			titleRow.getChildren().add(button_deletePost);
-		}
+		Label timeEffort = new Label(LP.timeEffort);
+		setupLabelUI(timeEffort, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+		timeEffort.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+		timeEffort.setMaxHeight(30);
+		timeEffortRow.getChildren().addAll(TimeDisplay, timeEffort);
+		
+		//if (LP.timeEditable) {
+		//	TextArea timeEffortTXT = new TextArea(LP.timeEffort);
+		//	timeEffortTXT.textProperty().addListener((observableTETXT, oldValueTETXT, newValueTETXT) -> {theDatabase.updateTimeEffort(newValueTETXT, LP.ID);});
+		//	timeEffortTXT.setMaxSize(250, 50);
+		//	timeEffortTXT.setWrapText(true);
+		//	
+		//	timeEffortTXT.setFont(Font.font("Franklin Gothic Book", 16));
+		//	timeEffortTXT.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+		//			+ "-fx-border-width: 2px;");
+		//	
+		//	timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);
+		//} else {Label timeEffortTXT = new Label(LP.timeEffort);
+		//		setupLabelUI(timeEffortTXT, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+		//		timeEffortTXT.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+		//		timeEffortTXT.setWrapText(true);
+		//		timeEffortTXT.setMaxWidth(250);
+		//		timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);}
+		//
+		
+		
+		
+		// Top Row Buttons
+		HBox buttonRow = new HBox(8);
+		buttonRow.setAlignment(Pos.CENTER);
+		buttonRow.getChildren().addAll(button_updatePost, button_deletePost);
+		
+		// Update
+		if (LP.titleEditable || LP.timeEditable || LP.bodyEditable) {
+			button_updatePost.setOnAction((_) -> {
+				if (!currentlyUpdating) {
+					button_updatePost.setText("Finish Updating");
+					currentlyUpdating = true;
+					if (LP.titleEditable) {
+						TextArea titleEdit = new TextArea(LP.postTitle);
+						titleEdit.getOnInputMethodTextChanged();
+						titleEdit.textProperty().addListener((observableTitle, oldValueTitle, newValueTitle) -> {theDatabase.updateTitle(newValueTitle, LP.ID); });
+						titleEdit.setMaxSize(250, 30);
+						titleEdit.setWrapText(true);
+						
+						titleEdit.setFont(Font.font("Franklin Gothic Book", 16));
+						titleEdit.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+								+ "-fx-border-width: 2px;");
+						titleRow.getChildren().clear();
+						titleRow.getChildren().addAll(TitleDisplay, titleEdit);
+						//refreshFeed();
+					} else {
+						// field is not editable
+						Label cannotEdit = new Label("Field cannot be edited");
+						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
+						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+						cannotEdit.setMaxSize(250, 30);
+						titleRow.getChildren().clear();
+						titleRow.getChildren().addAll(TitleDisplay, cannotEdit);
+						//refreshFeed();
+					}
+					
+					if (LP.bodyEditable) {
+						TextArea bodyEdit = new TextArea(LP.postBody);
+						bodyEdit.textProperty().addListener((observableBody, oldValueBody, newValueBody) -> {theDatabase.updateBody(newValueBody, LP.ID);});
+						bodyEdit.setMaxSize(250, 125);
+						bodyEdit.setWrapText(true);
+						bodyEdit.setFont(Font.font("Franklin Gothic Book", 16));
+						bodyEdit.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+								+ "-fx-border-width: 2px;");
+						bodyRow.getChildren().clear();
+						bodyRow.getChildren().addAll(BodyDisplay, bodyEdit);
+						//refreshFeed();
+					} else { 
+						// field is not editable
+						Label cannotEdit = new Label("Field cannot be edited");
+						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
+						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+						cannotEdit.setMaxSize(250, 30);
+						bodyRow.getChildren().clear();
+						bodyRow.getChildren().addAll(BodyDisplay, cannotEdit);
+						//refreshFeed();
+					}
+					
+					if (LP.timeEditable) {
+						TextArea timeEffortTXT = new TextArea(LP.timeEffort);
+						timeEffortTXT.textProperty().addListener((observableTETXT, oldValueTETXT, newValueTETXT) -> {theDatabase.updateTimeEffort(newValueTETXT, LP.ID);});
+						timeEffortTXT.setMaxSize(250, 50);
+						timeEffortTXT.setWrapText(true);
+							
+						timeEffortTXT.setFont(Font.font("Franklin Gothic Book", 16));
+						timeEffortTXT.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+								+ "-fx-border-width: 2px;");
+						timeEffortRow.getChildren().clear();
+						timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);
+					} else {
+						// field is not editable
+						Label cannotEdit = new Label("Field cannot be edited");
+						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
+						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+						cannotEdit.setMaxSize(250, 30);
+						timeEffortRow.getChildren().clear();
+						timeEffortRow.getChildren().addAll(TimeDisplay, cannotEdit);
+						//refreshFeed();
+					}
+					
+				} else {
+					// when done updating, change all the info to un-editable again
+					currentlyUpdating = false;
+					
+					Label titleDone = new Label(LP.postTitle);
+					setupLabelUI(titleDone, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+					titleDone.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+					titleDone.setMaxHeight(30);
+					titleRow.getChildren().clear();
+					titleRow.getChildren().addAll(TitleDisplay, titleDone);
+					
+					TextArea bodyDone = new TextArea(LP.postBody);
+					bodyDone.setMaxSize(250, 125);
+					bodyDone.setWrapText(true);
+					bodyDone.setFont(Font.font("Franklin Gothic Book", 16));
+					bodyDone.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
+							+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
+							+ "-fx-border-width: 2px;");
+					bodyDone.setEditable(false);
+					bodyRow.getChildren().clear();
+					bodyRow.getChildren().addAll(BodyDisplay, bodyDone);
+					
+					Label timeEffortDone = new Label(LP.timeEffort);
+					setupLabelUI(timeEffortDone, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
+					timeEffortDone.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
+					timeEffortDone.setMaxHeight(30);
+					timeEffortRow.getChildren().clear();
+					timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortDone);
+					
+					refreshFeed();
+				}
+			});
 			
-
+		} else {
+			button_updatePost.setText("Cannot Update Post");
+		}
+		
+		
+		// Delete
+		if (LP.titleEditable && LP.timeEditable && LP.bodyEditable && LP.Author.equals(theDatabase.getCurrentUsername())) {
+			newPost.getChildren().add(buttonRow);
+			button_deletePost.setOnAction((_) -> {
+				alertDeletePost.setTitle("Delete Post");
+				alertDeletePost.setHeaderText("You are about to permanently remove this lesson!");
+				alertDeletePost.setContentText("Are you sure you want to delete this post?");
+				Optional<ButtonType> result = alertDeletePost.showAndWait();
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					theDatabase.deletePost(LP.ID); 
+					refreshFeed();
+				}});
+		} else {
+			button_deletePost.setText("Cannot Delete Post");
+			newPost.getChildren().add(buttonRow);
+		}
+		
+		
+		
 		// UI LINES
 		Line outer_line_Sep = new Line(bodyRow.getHeight()- 15, 95, 350, 95);
-		Line inner_line_Sep = new Line(bodyRow.getHeight()- 15, 95, 125, 95);
-			
-		newPost.getChildren().addAll(authorRow,inner_line_Sep, titleRow, bodyRow, timeEffortRow, outer_line_Sep);
+		Line inner_line_Sep = new Line(bodyRow.getHeight()- 15, 95, 175, 95);
+		outer_line_Sep.setStroke(Color.DODGERBLUE);
+		inner_line_Sep.setStroke(Color.DODGERBLUE);	
+		
+		newPost.getChildren().addAll(inner_line_Sep, authorRow, titleRow, bodyRow, timeEffortRow, outer_line_Sep);
+		newPost.setAlignment(Pos.CENTER);
 		
 		return newPost;
 	}
+	
 	private String[] publishingInputValidation(String title, String Body, String timeTaken) {
 		// Input type refers to (0) Title, (1) Body, (2) time taken
 		
 		if (title.length() < 5) { return new String[] {"Invalid Title", "Title is less than 5 characters."};
-		} else if (Body.length() > 35) { return new String[] {"Invalid Title", "Title is more than 35 characters."};
+		} else if (title.length() > 35) { return new String[] {"Invalid Title", "Title is more than 35 characters."};
 		} else if (Body.length() < 10) { return new String[] {"Invalid Body", "Body is less than 10 characters."}; 
 		} else if (timeTaken.length() > 50) { return new String[] {"Invalid Body ", "Time taken is more than 50 characters."}; 
 		} else {return null;}	
 	}
 
+	
+	/*********************************************************************************************
+
+	Helper methods to reduce code length
+
+	 *********************************************************************************************/
+
+	/**********
+	 * Private local method to initialize the standard fields for a label
+	 */
+
+	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
+		l.setFont(Font.font(ff, f));
+		l.setMinWidth(w);
+		l.setAlignment(p);
+		l.setLayoutX(x);
+		l.setLayoutY(y);	
+		l.setStyle("-fx-text-fill: " + c);
+	}
+
+	/**********
+	 * Private local method to initialize the standard fields for a button
+	 * 
+	 * @param b		The Button object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the Button
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 * @param tc	The text color of the button
+	 * @param bc	The background color of the button
+	 */
+	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y, String tc, String bc){
+		b.setFont(Font.font(ff, f));
+		b.setMinWidth(w);
+		b.setAlignment(p);
+		b.setLayoutX(x);
+		b.setLayoutY(y);
+		b.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + "; -fx-background-radius: 10px;");
+	}
+	
+	/**********
+	 * Private local method to initialize the standard fields for a text field
+	 */
+	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e){
+		t.setFont(Font.font(ff, f));
+		t.setMinWidth(w);
+		t.setMaxWidth(w);
+		t.setAlignment(p);
+		t.setLayoutX(x);
+		t.setLayoutY(y);		
+		t.setEditable(e);
+		t.setStyle("-fx-text-fill: white; -fx-background-color: #1A1A1A;"
+				+ " -fx-border-color: grey; -fx-border-width: 2px; -fx-border-radius: 10px;");
+	}
+	
+	/********** 
+	 * Private local method to initialize the Post box UI
+	 */
+	private static void SetupPostBoxUI(TextArea Title, TextArea Body, TextArea timeTakenArea ){
+		Title.setMinWidth(100);
+		Title.setMaxWidth(250);
+		Title.setMinHeight(25);
+		Title.setMaxHeight(50);
+		Title.setLayoutX(50);
+		Title.setLayoutY(105);
+		Title.setPrefRowCount(8);
+		Title.setWrapText(true);
+		Title.setPromptText("<Insert Title Information here>");
+			
+		Body.setMinWidth(100);
+		Body.setMaxWidth(250);
+		Body.setMinHeight(100);
+		Body.setMaxHeight(125);
+		Body.setLayoutX(50);
+		Body.setLayoutY(165);
+		Body.setPrefRowCount(8);
+		Body.setWrapText(true);
+		Body.setPromptText("<Insert lessons learned body information here>");
+		
+		timeTakenArea.setMinWidth(100);
+		timeTakenArea.setMaxWidth(250);
+		timeTakenArea.setMinHeight(25);
+		timeTakenArea.setMaxHeight(50);
+		timeTakenArea.setLayoutX(50);
+		timeTakenArea.setLayoutY(300);
+		timeTakenArea.setPrefRowCount(8);
+		timeTakenArea.setWrapText(true);
+		timeTakenArea.setPromptText("<Insert time taken data here in hours>");
+	}
+	
 }

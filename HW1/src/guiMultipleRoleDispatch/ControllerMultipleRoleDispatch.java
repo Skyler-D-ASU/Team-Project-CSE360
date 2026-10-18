@@ -82,7 +82,8 @@ public class ControllerMultipleRoleDispatch {
 			// Invalid role
 			System.out.println("*** ERROR *** GUIMultipleRoleDispatch was asked to dispatch to " +
 					"a role, " + role + ", that is not supported!");
-			System.exit(0);
+			ViewMultipleRoleDispatch.alert_InvalidRole.showAndWait();
+			//System.exit(0);
 		}
 	}
 	

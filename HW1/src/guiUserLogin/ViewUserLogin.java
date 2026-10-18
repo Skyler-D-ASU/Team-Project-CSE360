@@ -130,25 +130,27 @@ public class ViewUserLogin {
 		theUserLoginScene = new Scene(theRootPane, width, height);
 		
 		// Populate the window with the title and other common widgets and set their static state
-		setupLabelUI(label_ApplicationTitle, "Arial", 32, width, Pos.CENTER, 0, 10);
+		theRootPane.setStyle("-fx-background-color: #1A1A1A");
+		
+		setupLabelUI(label_ApplicationTitle, "Franklin Gothic Heavy", 32, width, Pos.CENTER, 0, 10, "white");
 
-		setupLabelUI(label_OperationalStartTitle, "Arial", 24, width, Pos.CENTER, 0, 60);
+		setupLabelUI(label_OperationalStartTitle, "Franklin Gothic Demi", 24, width, Pos.CENTER, 0, 60, "#9885FF");
 
 
 		// Existing user log in portion of the page
 
-		setupLabelUI(label_LogInInsrtuctions, "Arial", 18, width, Pos.BASELINE_LEFT, 20, 120);
+		setupLabelUI(label_LogInInsrtuctions, "Franklin Gothic Medium", 18, width, Pos.BASELINE_LEFT, 20, 120, "#0080FF");
 
 		// Establish the text input operand field for the username
-		setupTextUI(text_Username, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 160, true);
+		setupTextUI(text_Username, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 160, true);
 		text_Username.setPromptText("Enter Username");
 
 		// Establish the text input operand field for the password
-		setupTextUI(text_Password, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
+		setupTextUI(text_Password, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
 		text_Password.setPromptText("Enter Password");
 
 		// Set up the Log In button
-		setupButtonUI(button_Login, "Dialog", 18, 200, Pos.CENTER, 475, 180);
+		setupButtonUI(button_Login, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 475, 180, "white", "#008537");
 		button_Login.setOnAction((_) -> {ControllerUserLogin.doLogin(theStage); });
 
 		alertUsernamePasswordError.setTitle("Invalid username/password!");
@@ -157,21 +159,21 @@ public class ViewUserLogin {
 
 		// The invitation to setup an account portion of the page
 
-		setupLabelUI(label_AccountSetupInsrtuctions, "Arial", 18, width, Pos.BASELINE_LEFT, 20, 300);
+		setupLabelUI(label_AccountSetupInsrtuctions, "Franklin Gothic Medium", 18, width, Pos.BASELINE_LEFT, 20, 300, "#0080FF");
 
 		// Establish the text input operand field for the password
-		setupTextUI(text_Invitation, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 340, true);
+		setupTextUI(text_Invitation, "Franklin Gothic Book", 18, 300, Pos.BASELINE_LEFT, 50, 340, true);
 		text_Invitation.setPromptText("Enter Invitation Code");
 
 		// Set up the setup button
-		setupButtonUI(button_SetupAccount, "Dialog", 18, 200, Pos.CENTER, 475, 340);
+		setupButtonUI(button_SetupAccount, "Franklin Gothic Demi", 18, 200, Pos.CENTER, 475, 340, "white", "#008537");
 		button_SetupAccount.setOnAction((_) -> {
 			System.out.println("**** Calling doSetupAccount");
 			ControllerUserLogin.doSetupAccount(theStage, text_Invitation.getText());
 		});
 
 		// Set up the Quit button  
-		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
+		setupButtonUI(button_Quit, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 300, 520, "white", "#3B3B3B");
 		button_Quit.setOnAction((_) -> {ControllerUserLogin.performQuit(); });
 
 		//		theRootPane.getChildren().clear();
@@ -185,7 +187,7 @@ public class ViewUserLogin {
 	}
 
 
-	/*-********************************************************************************************
+	/*********************************************************************************************
 
 	Helper methods to reduce code length
 
@@ -195,12 +197,13 @@ public class ViewUserLogin {
 	 * Private local method to initialize the standard fields for a label
 	 */
 
-	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
 		l.setAlignment(p);
 		l.setLayoutX(x);
-		l.setLayoutY(y);		
+		l.setLayoutY(y);	
+		l.setStyle("-fx-text-fill: " + c);
 	}
 
 
@@ -214,13 +217,16 @@ public class ViewUserLogin {
 	 * @param p		The alignment (e.g. left, centered, or right)
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
+	 * @param tc	The text color of the button
+	 * @param bc	The background color of the button
 	 */
-	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y, String tc, String bc){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
 		b.setLayoutX(x);
-		b.setLayoutY(y);		
+		b.setLayoutY(y);
+		b.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + "; -fx-background-radius: 10px;");
 	}
 
 	/**********
@@ -234,5 +240,7 @@ public class ViewUserLogin {
 		t.setLayoutX(x);
 		t.setLayoutY(y);		
 		t.setEditable(e);
-	}		
+		t.setStyle("-fx-text-fill: white; -fx-background-color: #1A1A1A;"
+				+ " -fx-border-color: grey; -fx-border-width: 2px; -fx-border-radius: 10px;");
+	}			
 }

@@ -5,10 +5,13 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -54,9 +57,11 @@ public class ViewMultipleRoleDispatch {
 
 	// GUI Area 2: This area consists of a label to ask the user what roles to place, a ComboBox 
 	// so the user can select the role, and a button to perform that role.
-	private static Label label_WhichRole = new Label("Which role do you wish to play:");
+	private static Label label_WhichRole = new Label("Select which role you wish to play:");
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
 	private static Button button_PerformRole = new Button("Perform Role");		
+	
+	protected static Alert alert_InvalidRole = new Alert(AlertType.INFORMATION);
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -113,10 +118,10 @@ public class ViewMultipleRoleDispatch {
 		theDatabase.getUserAccountDetails(theUser.getUserName());
 		
 		label_UserDetails.setText("User: " + theUser.getUserName() + "   Select which role");
-		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.CENTER, 0, 50);
+		setupLabelUI(label_UserDetails, "Franklin Gothic Demi", 20, width, Pos.CENTER, 0, 50, "#9885FF");
 
 		label_UserDetails.setText("User: " + theUser.getUserName());
-		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);			
+		setupLabelUI(label_UserDetails, "Franklin Gothic Demi", 20, width, Pos.BASELINE_LEFT, 20, 55, "#9885FF");			
 
 		System.out.println("*** Getting multiple role details for user: " + theUser.getUserName());
 		list = new ArrayList<String>();
@@ -156,25 +161,38 @@ public class ViewMultipleRoleDispatch {
 
 		// Populate the window with the title and other common widgets and set their static state
 		
+		theRootPane.setStyle("-fx-background-color: #1A1A1A");
+		
 		// GUI Area 1
-		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
-
+		
+		setupLabelUI(label_PageTitle, "Franklin Gothic Heavy", 28, width, Pos.CENTER, 0, 10, "white");
+		line_Separator1.setStroke(Color.WHITE);
+		
 		// GUI Area 2
-		setupLabelUI(label_WhichRole, "Arial", 20, 200, Pos.BASELINE_LEFT, 20, 110);
+		
+		setupLabelUI(label_WhichRole, "Franklin Gothic Medium", 20, 200, Pos.BASELINE_LEFT, 20, 110, "#0080FF");
 
-		setupComboBoxUI(combobox_SelectRole, "Dialog", 16, 100, 305, 105);
+		setupComboBoxUI(combobox_SelectRole, "Franklin Gothic Book", 16, 150, 325, 110, "white", "#1A1A1A");
+		
+		// Setup alert if chosen role is invalid
+		alert_InvalidRole.setTitle("Invalid Role");
+		alert_InvalidRole.setHeaderText("Must choose a role from the list to continue!");
+		alert_InvalidRole.setContentText("Please try again or logout.");
 
-		setupButtonUI(button_PerformRole, "Dialog", 16, 100, Pos.CENTER, 495, 105);
+		setupButtonUI(button_PerformRole, "Franklin Gothic Demi", 16, 150, Pos.CENTER, 495, 109, "white", "#008537");
 		button_PerformRole.setOnAction((_) -> 
 		{guiMultipleRoleDispatch.ControllerMultipleRoleDispatch.performRole(); });
 
 		
-		// GUI Area 3		
-		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		// GUI Area 3
+		
+		line_Separator4.setStroke(Color.WHITE);
+		
+		setupButtonUI(button_Logout, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 100, 540, "white", "#3B3B3B");
 		button_Logout.setOnAction((_) -> 
 		{guiMultipleRoleDispatch.ControllerMultipleRoleDispatch.performLogout(); });
 
-		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+		setupButtonUI(button_Quit, "Franklin Gothic Demi", 18, 250, Pos.CENTER, 450, 540, "white", "#3B3B3B");
 		button_Quit.setOnAction((_) -> 
 		{guiMultipleRoleDispatch.ControllerMultipleRoleDispatch.performQuit(); });
 		
@@ -194,22 +212,23 @@ public class ViewMultipleRoleDispatch {
 	}
 
 
-	/*-********************************************************************************************
+	/*********************************************************************************************
 
-		Helper methods to reduce code length
+	Helper methods to reduce code length
 
-	 */
+	 *********************************************************************************************/
 
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 */
 
-	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
+	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
 		l.setAlignment(p);
 		l.setLayoutX(x);
-		l.setLayoutY(y);		
+		l.setLayoutY(y);	
+		l.setStyle("-fx-text-fill: " + c);
 	}
 
 
@@ -223,13 +242,16 @@ public class ViewMultipleRoleDispatch {
 	 * @param p		The alignment (e.g. left, centered, or right)
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
+	 * @param tc	The text color of the button
+	 * @param bc	The background color of the button
 	 */
-	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y, String tc, String bc){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
 		b.setLayoutX(x);
-		b.setLayoutY(y);		
+		b.setLayoutY(y);
+		b.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + "; -fx-background-radius: 10px;");
 	}
 
 
@@ -242,12 +264,17 @@ public class ViewMultipleRoleDispatch {
 	 * @param w		The width of the ComboBox
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
+	 * @param tc 	The text color
+	 * @param bc	The background color
 	 */
-	private void setupComboBoxUI(ComboBox <String> c, String ff, double f, double w, double x, 
-			double y){
+	private static void setupComboBoxUI(ComboBox <String> c, String ff, double f, double w, double x, 
+			double y, String tc, String bc){
 		c.setStyle("-fx-font: " + f + " " + ff + ";");
 		c.setMinWidth(w);
 		c.setLayoutX(x);
 		c.setLayoutY(y);
+		c.setStyle("-fx-text-fill: " + tc + "; -fx-background-color: " + bc + 
+				"; -fx-border-color: grey; -fx-border-width: 2px; -fx-control-inner-background: " + bc +
+				"; -fx-text-base-color: " + tc);
 	}
 }
