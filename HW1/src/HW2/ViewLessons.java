@@ -26,21 +26,22 @@ import java.util.List;
 import java.util.Optional;
 
 import database.Database;
+import entityClasses.LessonsLearned;
 import entityClasses.User;
 
 
 /*******
- * <p> Title: ViewContributorHome Class. </p>
+ * <p> Title: ViewLessons Class. </p>
  * 
- * <p> Description: The Java/FX-based Role1 Home Page.  The page is a stub for some role needed for
- * the application.  The widgets on this page are likely the minimum number and kind for other role
- * pages that may be needed.</p>
+ * <p> Description: The Java/FX-based Contributor page for editting, viewing, and deleting
+ * 	   their own lesson posts from the database.</p>
  * 
  * <p> Copyright: Lynn Robert Carter © 2025 </p>
  * 
- * @author Lynn Robert Carter
+ * @author Lynn Robert Carter, Skyler DeLongchamp
  * 
  * @version 1.00		2025-08-20 Initial version
+ * @version 1.01		2026-10-23 Expanded Functionality
  *  
  */
 
@@ -53,8 +54,9 @@ public class ViewLessons {
 	 */
 	
 	// These are the application values required by the user interface
-	
+	/** Sets Window Width*/
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	/** Sets Window Height*/
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 
@@ -62,66 +64,78 @@ public class ViewLessons {
 	
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
+	/** label for the page title */
 	protected static Label label_PageTitle = new Label();
+	/** label for user details */
 	protected static Label label_UserDetails = new Label();
+	/** button for updating account */
 	protected static Button button_UpdateThisUser = new Button("Account Update");
 	
-	// This is a separator and it is used to partition the GUI for various tasks
+	/** This is a separator and it is used to partition the GUI for various tasks */
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
-	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
-	// would contain the widgets needed for the user to play the assigned role.
+	/** GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
+	    would contain the widgets needed for the user to play the assigned role. */
 	protected static Button button_NewPost = new Button("New Post");
 	
 	// Post display area
+	/** Box for all lessons */
 	private VBox LessonsBox = new VBox(15);
+	/** scroll pane to allow storing all lessons boxes */
 	private ScrollPane LessonsScroll = new ScrollPane(LessonsBox);
+	/** Is the visuals updating */
 	private boolean currentlyUpdating = false;
 	
 	// Self post
+	/** title for self post */
 	private TextArea PostTitle = new TextArea();
+	/** text body of self post */
 	private TextArea PostBody = new TextArea();
+	/** text Area for time taken */
 	private TextArea timeTakenArea = new TextArea();
 	
 	// Alert for posts
+	/** Invalid post alert */
 	protected static Alert alertPostInvalid = new Alert(AlertType.INFORMATION);
+	/** delete post alert */
 	protected static Alert alertDeletePost = new Alert(AlertType.CONFIRMATION);
 	
-	// This is a separator and it is used to partition the GUI for various tasks
+	/** This is a separator and it is used to partition the GUI for various tasks */
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application, 
-	// logging out, and returning to the user's home page.
+	/** Returning to the user's home page. */
 	protected static Button button_ReturnToHomePage = new Button("Return");
+	/** button for logging out. */
 	protected static Button button_Logout = new Button("Logout");
+	/** Button for quitting application. */
 	protected static Button button_Quit = new Button("Quit");
 
 	// This is the end of the GUI objects for the page.
 	
 	// These attributes are used to configure the page and populate it with this user's information
-	private static ViewLessons theView;		// Used to determine if instantiation of the class
-												// is needed
+	/**Used to determine if instantiation of the class is needed*/
+	private static ViewLessons theView;
 
-	// Reference for the in-memory database so this package has access
+	/** Reference for the in-memory database so this package has access */
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
-
-	protected static Stage theStage;			// The Stage that JavaFX has established for us	
-	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
-	protected static User theUser;				// The current logged in User
 	
-
-	private static Scene theViewContributorHomeScene;	// The shared Scene each invocation populates
-	protected static final int theRole = 2;		// Admin: 1; Contributor: 2; Role2: 3
-
-	/*-*******************************************************************************************
-
-	Constructors
+	public LessonsLearned LessonsLearned = new LessonsLearned();
 	
-	 */
-
+	/** The Stage that JavaFX has established for us	*/
+	protected static Stage theStage;			
+	/** The Pane that holds all the GUI widgets*/
+	protected static Pane theRootPane;	
+	/** The current logged in User*/
+	protected static User theUser;				
+	
+	/** The shared Scene each invocation populates*/
+	private static Scene theViewContributorHomeScene;	
+	/** Admin: 1; Contributor: 2; Role2: 3 */
+	protected static final int theRole = 2;		
 
 	/**********
-	 * <p> Method: displayRole1Home(Stage ps, User user) </p>
+	 * <p> Method: displayLessonsHome(Stage ps, User user) </p>
 	 * 
 	 * <p> Description: This method is the single entry point from outside this package to cause
 	 * the Role1 Home page to be displayed.
@@ -166,16 +180,16 @@ public class ViewLessons {
 	}
 	
 	/**********
-	 * <p> Method: ViewRole1Home() </p>
+	 * <p> Method: ViewLessons() </p>
 	 * 
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for
 	 * each GUI object.</p>
 	 * 
-	 * This is a singleton and is only performed once.  Subsequent uses fill in the changeable
+	 * <p> This is a singleton and is only performed once.  Subsequent uses fill in the changeable
 	 * fields using the displayRole2Home method.</p>
 	 * 
-	 */
+	 */	
 	private ViewLessons() {
 
 		// Create the Pane for the list of widgets and the Scene for the window
@@ -205,8 +219,8 @@ public class ViewLessons {
 		
 		setupButtonUI(button_NewPost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 110, 450, "white", "#008537");
 		
-		button_NewPost.setOnAction((_) -> {Publish();
-		refreshFeed();});
+		button_NewPost.setOnAction((_) -> {LessonsBox = LessonsLearned.Publish(PostTitle, PostBody, timeTakenArea, LessonsBox); 
+										   LessonsLearned.refreshFeed(LessonsBox);});
 		
 		// Display Area
 		LessonsBox.setPadding(new Insets(8, 8, 8, 0));
@@ -257,335 +271,9 @@ public class ViewLessons {
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
 	        line_Separator4, button_ReturnToHomePage, button_Logout, button_Quit, 
 	        button_NewPost, LessonsBox, LessonsScroll, PostBody, PostTitle, timeTakenArea);
-         refreshFeed();
+         LessonsLearned.refreshFeed(LessonsBox);
 	}	
 	
-	
-	private void Publish() {
-		String Err[];
-		
-		String t = PostTitle.getText().trim();
-		String b = PostBody.getText().trim();
-		String tt = timeTakenArea.getText().trim();
-		
-		Err = publishingInputValidation(t, b, tt);
-		
-		if (Err != null) {
-			alertPostInvalid.setTitle(Err[0]);
-			alertPostInvalid.setHeaderText(Err[1]);
-			alertPostInvalid.setContentText("Correct the Title and try again.");
-			alertPostInvalid.showAndWait();
-		} else {
-			theDatabase.createPost(theDatabase.getCurrentUsername(), t, b, tt, true, true, true);
-			PostTitle.clear();
-			PostBody.clear();
-			timeTakenArea.clear();
-			refreshFeed();
-			}
-	}
-	
-	private void refreshFeed() {
-		LessonsBox.getChildren().clear();
-		List<lessonPost> lPosts = theDatabase.getAllPosts();
-		for (lessonPost LP : lPosts) {
-			if (LP.Author.equals(theDatabase.getCurrentUsername())) {
-				System.out.println("Author: " + LP.Author + " Currently Logged in user: " + theDatabase.getCurrentUsername());
-				LessonsBox.getChildren().add(createNewPostBox(LP)); }
-			}
-	}
-	
-	private VBox createNewPostBox(lessonPost LP) {
-		VBox newPost = new VBox(8);
-
-		Label AuthorDisplay = new Label("Author: ");
-		setupLabelUI(AuthorDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
-		Label TitleDisplay = new Label("Title: ");
-		setupLabelUI(TitleDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
-		Label BodyDisplay = new Label("Body: ");
-		setupLabelUI(BodyDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
-		Label TimeDisplay = new Label("Time/Effort: ");
-		setupLabelUI(TimeDisplay, "Franklin Gothic Medium", 18, 100, Pos.BASELINE_RIGHT, 0, 30, "#9885FF");
-
-		Button button_updatePost = new Button("Update Post");
-		setupButtonUI(button_updatePost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 30, 30, "white", "#008537");
-		Button button_deletePost = new Button("Delete Post");
-        setupButtonUI(button_deletePost, "Franklin Gothic Demi", 18, 125, Pos.CENTER, 30, 30, "white", "#008537");
-        
-        
-        // fields all start as locked/labels until update button is pressed
-        // then check if field is locked/unlocked and change to editable text box
-        // when finished updating, click button and change back to un-editable labels
-        
-		//Title Row
-		HBox titleRow = new HBox(8);
-		titleRow.setAlignment(Pos.CENTER);
-		
-		Label title = new Label(LP.postTitle);
-		setupLabelUI(title, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-		title.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-		title.setMaxHeight(30);
-		titleRow.getChildren().addAll(TitleDisplay, title);
-		
-		//if (LP.titleEditable) {
-		//	TextArea title = new TextArea(LP.postTitle);
-		//	
-		//	title.getOnInputMethodTextChanged();
-		//	title.textProperty().addListener((observableTitle, oldValueTitle, newValueTitle) -> {theDatabase.updateTitle(newValueTitle, LP.ID); });
-		//	title.setMaxSize(250, 30);
-		//	title.setWrapText(true);
-		//	
-		//	title.setFont(Font.font("Franklin Gothic Book", 16));
-		//	title.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-		//			+ "-fx-border-width: 2px;");
-		//	
-		//	titleRow.getChildren().addAll(TitleDisplay, title);
-		//} else {Label title = new Label(LP.postTitle);
-		//		setupLabelUI(title, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-		//		title.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-		//		title.setMaxHeight(30);
-		//		titleRow.getChildren().addAll(TitleDisplay, title);}
-		//
-			
-		
-		//Author Row
-		HBox authorRow = new HBox(8);
-		Label author = new Label(LP.Author);
-		setupLabelUI(author, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-		author.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-		author.setMaxHeight(30);
-		authorRow.setAlignment(Pos.CENTER);
-		authorRow.getChildren().addAll(AuthorDisplay, author);
-			
-		//Body Row
-		HBox bodyRow = new HBox(8);
-		bodyRow.setAlignment(Pos.CENTER);
-		
-		TextArea body = new TextArea(LP.postBody);
-		body.setMaxSize(250, 125);
-		body.setWrapText(true);
-		body.setFont(Font.font("Franklin Gothic Book", 16));
-		body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-				+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-				+ "-fx-border-width: 2px;");
-		body.setEditable(false);
-		bodyRow.getChildren().addAll(BodyDisplay, body);
-		
-		//if (LP.bodyEditable) {
-		//	TextArea body = new TextArea(LP.postBody);
-		//	body.textProperty().addListener((observableBody, oldValueBody, newValueBody) -> {theDatabase.updateBody(newValueBody, LP.ID);});
-		//	body.setMaxSize(250, 125);
-		//	body.setWrapText(true);
-		//	body.setFont(Font.font("Franklin Gothic Book", 16));
-		//	body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-		//			+ "-fx-border-width: 2px;");
-		//	
-		//	bodyRow.getChildren().addAll(BodyDisplay, body);
-		//} else { TextArea body = new TextArea(LP.postBody);
-		//	body.setMaxSize(250, 125);
-		//	body.setWrapText(true);
-		//	body.setFont(Font.font("Franklin Gothic Book", 16));
-		//	body.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-		//		+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-		//		+ "-fx-border-width: 2px;");
-		//	body.setEditable(false);
-		//	bodyRow.getChildren().addAll(BodyDisplay, body);}
-		//
-			
-		
-		//Time Effort Row
-		HBox timeEffortRow = new HBox(8);
-		timeEffortRow.setAlignment(Pos.CENTER);
-		
-		Label timeEffort = new Label(LP.timeEffort);
-		setupLabelUI(timeEffort, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-		timeEffort.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-		timeEffort.setMaxHeight(30);
-		timeEffortRow.getChildren().addAll(TimeDisplay, timeEffort);
-		
-		//if (LP.timeEditable) {
-		//	TextArea timeEffortTXT = new TextArea(LP.timeEffort);
-		//	timeEffortTXT.textProperty().addListener((observableTETXT, oldValueTETXT, newValueTETXT) -> {theDatabase.updateTimeEffort(newValueTETXT, LP.ID);});
-		//	timeEffortTXT.setMaxSize(250, 50);
-		//	timeEffortTXT.setWrapText(true);
-		//	
-		//	timeEffortTXT.setFont(Font.font("Franklin Gothic Book", 16));
-		//	timeEffortTXT.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-		//			+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-		//			+ "-fx-border-width: 2px;");
-		//	
-		//	timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);
-		//} else {Label timeEffortTXT = new Label(LP.timeEffort);
-		//		setupLabelUI(timeEffortTXT, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-		//		timeEffortTXT.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-		//		timeEffortTXT.setWrapText(true);
-		//		timeEffortTXT.setMaxWidth(250);
-		//		timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);}
-		//
-		
-		
-		
-		// Top Row Buttons
-		HBox buttonRow = new HBox(8);
-		buttonRow.setAlignment(Pos.CENTER);
-		buttonRow.getChildren().addAll(button_updatePost, button_deletePost);
-		
-		// Update
-		if (LP.titleEditable || LP.timeEditable || LP.bodyEditable) {
-			button_updatePost.setOnAction((_) -> {
-				if (!currentlyUpdating) {
-					button_updatePost.setText("Finish Updating");
-					currentlyUpdating = true;
-					if (LP.titleEditable) {
-						TextArea titleEdit = new TextArea(LP.postTitle);
-						titleEdit.getOnInputMethodTextChanged();
-						titleEdit.textProperty().addListener((observableTitle, oldValueTitle, newValueTitle) -> {theDatabase.updateTitle(newValueTitle, LP.ID); });
-						titleEdit.setMaxSize(250, 30);
-						titleEdit.setWrapText(true);
-						
-						titleEdit.setFont(Font.font("Franklin Gothic Book", 16));
-						titleEdit.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-								+ "-fx-border-width: 2px;");
-						titleRow.getChildren().clear();
-						titleRow.getChildren().addAll(TitleDisplay, titleEdit);
-						//refreshFeed();
-					} else {
-						// field is not editable
-						Label cannotEdit = new Label("Field cannot be edited");
-						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
-						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-						cannotEdit.setMaxSize(250, 30);
-						titleRow.getChildren().clear();
-						titleRow.getChildren().addAll(TitleDisplay, cannotEdit);
-						//refreshFeed();
-					}
-					
-					if (LP.bodyEditable) {
-						TextArea bodyEdit = new TextArea(LP.postBody);
-						bodyEdit.textProperty().addListener((observableBody, oldValueBody, newValueBody) -> {theDatabase.updateBody(newValueBody, LP.ID);});
-						bodyEdit.setMaxSize(250, 125);
-						bodyEdit.setWrapText(true);
-						bodyEdit.setFont(Font.font("Franklin Gothic Book", 16));
-						bodyEdit.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-								+ "-fx-border-width: 2px;");
-						bodyRow.getChildren().clear();
-						bodyRow.getChildren().addAll(BodyDisplay, bodyEdit);
-						//refreshFeed();
-					} else { 
-						// field is not editable
-						Label cannotEdit = new Label("Field cannot be edited");
-						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
-						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-						cannotEdit.setMaxSize(250, 30);
-						bodyRow.getChildren().clear();
-						bodyRow.getChildren().addAll(BodyDisplay, cannotEdit);
-						//refreshFeed();
-					}
-					
-					if (LP.timeEditable) {
-						TextArea timeEffortTXT = new TextArea(LP.timeEffort);
-						timeEffortTXT.textProperty().addListener((observableTETXT, oldValueTETXT, newValueTETXT) -> {theDatabase.updateTimeEffort(newValueTETXT, LP.ID);});
-						timeEffortTXT.setMaxSize(250, 50);
-						timeEffortTXT.setWrapText(true);
-							
-						timeEffortTXT.setFont(Font.font("Franklin Gothic Book", 16));
-						timeEffortTXT.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-								+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-								+ "-fx-border-width: 2px;");
-						timeEffortRow.getChildren().clear();
-						timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortTXT);
-					} else {
-						// field is not editable
-						Label cannotEdit = new Label("Field cannot be edited");
-						setupLabelUI(cannotEdit, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "#E00000");
-						cannotEdit.setStyle("-fx-text-fill: #E00000; -fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-						cannotEdit.setMaxSize(250, 30);
-						timeEffortRow.getChildren().clear();
-						timeEffortRow.getChildren().addAll(TimeDisplay, cannotEdit);
-						//refreshFeed();
-					}
-					
-				} else {
-					// when done updating, change all the info to un-editable again
-					currentlyUpdating = false;
-					
-					Label titleDone = new Label(LP.postTitle);
-					setupLabelUI(titleDone, "Franklin Gothic Medium", 14, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-					titleDone.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-					titleDone.setMaxHeight(30);
-					titleRow.getChildren().clear();
-					titleRow.getChildren().addAll(TitleDisplay, titleDone);
-					
-					TextArea bodyDone = new TextArea(LP.postBody);
-					bodyDone.setMaxSize(250, 125);
-					bodyDone.setWrapText(true);
-					bodyDone.setFont(Font.font("Franklin Gothic Book", 16));
-					bodyDone.setStyle("-fx-prompt-text-fill: grey; -fx-text-fill: white;"
-							+ " -fx-control-inner-background: #1A1A1A; -fx-border-color: grey; "
-							+ "-fx-border-width: 2px;");
-					bodyDone.setEditable(false);
-					bodyRow.getChildren().clear();
-					bodyRow.getChildren().addAll(BodyDisplay, bodyDone);
-					
-					Label timeEffortDone = new Label(LP.timeEffort);
-					setupLabelUI(timeEffortDone, "Franklin Gothic Medium", 16, 250, Pos.BASELINE_LEFT, 105, 30, "white");
-					timeEffortDone.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-padding: 10px; -fx-border-radius: 5px;");
-					timeEffortDone.setMaxHeight(30);
-					timeEffortRow.getChildren().clear();
-					timeEffortRow.getChildren().addAll(TimeDisplay, timeEffortDone);
-					
-					refreshFeed();
-				}
-			});
-			
-		} else {
-			button_updatePost.setText("Cannot Update Post");
-		}
-		
-		
-		// Delete
-		if (LP.titleEditable && LP.timeEditable && LP.bodyEditable && LP.Author.equals(theDatabase.getCurrentUsername())) {
-			newPost.getChildren().add(buttonRow);
-			button_deletePost.setOnAction((_) -> {
-				alertDeletePost.setTitle("Delete Post");
-				alertDeletePost.setHeaderText("You are about to permanently remove this lesson!");
-				alertDeletePost.setContentText("Are you sure you want to delete this post?");
-				Optional<ButtonType> result = alertDeletePost.showAndWait();
-				if (result.isPresent() && result.get() == ButtonType.OK) {
-					theDatabase.deletePost(LP.ID); 
-					refreshFeed();
-				}});
-		} else {
-			button_deletePost.setText("Cannot Delete Post");
-			newPost.getChildren().add(buttonRow);
-		}
-		
-		
-		
-		// UI LINES
-		Line outer_line_Sep = new Line(bodyRow.getHeight()- 15, 95, 350, 95);
-		Line inner_line_Sep = new Line(bodyRow.getHeight()- 15, 95, 175, 95);
-		outer_line_Sep.setStroke(Color.DODGERBLUE);
-		inner_line_Sep.setStroke(Color.DODGERBLUE);	
-		
-		newPost.getChildren().addAll(inner_line_Sep, authorRow, titleRow, bodyRow, timeEffortRow, outer_line_Sep);
-		newPost.setAlignment(Pos.CENTER);
-		
-		return newPost;
-	}
-	
-	private String[] publishingInputValidation(String title, String Body, String timeTaken) {
-		// Input type refers to (0) Title, (1) Body, (2) time taken
-		
-		if (title.length() < 5) { return new String[] {"Invalid Title", "Title is less than 5 characters."};
-		} else if (title.length() > 35) { return new String[] {"Invalid Title", "Title is more than 35 characters."};
-		} else if (Body.length() < 10) { return new String[] {"Invalid Body", "Body is less than 10 characters."}; 
-		} else if (timeTaken.length() > 50) { return new String[] {"Invalid Body ", "Time taken is more than 50 characters."}; 
-		} else {return null;}	
-	}
 
 	
 	/*********************************************************************************************
@@ -596,8 +284,17 @@ public class ViewLessons {
 
 	/**********
 	 * Private local method to initialize the standard fields for a label
+	 * 
+	 * @param l		The Label object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the Button
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 * @param c		the text fill style
 	 */
-
+	
 	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y, String c){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
@@ -631,6 +328,15 @@ public class ViewLessons {
 	
 	/**********
 	 * Private local method to initialize the standard fields for a text field
+	 * 
+	 * @param t		The textField Object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the Button
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 * @param e 	The text is editable (True/False)
 	 */
 	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e){
 		t.setFont(Font.font(ff, f));
@@ -646,6 +352,10 @@ public class ViewLessons {
 	
 	/********** 
 	 * Private local method to initialize the Post box UI
+	 * 
+	 * @param Title title of post
+	 * @param Body body of post
+	 * @param timeTakenArea time taken area of post
 	 */
 	private static void SetupPostBoxUI(TextArea Title, TextArea Body, TextArea timeTakenArea ){
 		Title.setMinWidth(100);

@@ -3,7 +3,8 @@ package HW2;
 /*******
  * <p> Title: lessonPost Class. </p>
  * 
- * <p> Description: Creates a LP object that stores basic components </p>
+ * <p> Description: Creates a lessonPost object that stores basic components of a lessonPost,
+ * 	   View constructor for more details.s</p>
  * 
  * <p> Copyright: Skyler DeLongchamp © 2026 </p>
  * 
@@ -35,7 +36,7 @@ public class lessonPost {
 	 */
 	public lessonPost() {}
 	/**
-	 * Main Constructor
+	 * Constructor with inputs
 	 * 
 	 * @param Author stores author
 	 * @param postTitle stores title of post

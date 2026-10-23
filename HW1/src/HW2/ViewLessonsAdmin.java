@@ -25,15 +25,14 @@ import guiAdminHome.ViewAdminHome;
 
 
 /*******
- * <p> Title: ViewContributorHome Class. </p>
+ * <p> Title: ViewLessonsAdmin Class. </p>
  * 
- * <p> Description: The Java/FX-based Role1 Home Page.  The page is a stub for some role needed for
- * the application.  The widgets on this page are likely the minimum number and kind for other role
- * pages that may be needed.</p>
+ * <p> Description: The Java/FX-based Admin page for viewing lessons shared and performing their 
+ *     various functions. May be used to implement a curator role..</p>
  * 
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * <p> Copyright: Skyler DeLongchamp © 2025 </p>
  * 
- * @author Lynn Robert Carter
+ * @author Skyler DeLongchamp, Kimberly Kasonic
  * 
  * @version 1.00		2025-08-20 Initial version
  *  
@@ -233,7 +232,7 @@ public class ViewLessonsAdmin {
 	/*-********************************************************************************************
 
 	Helper methods to reduce code length
-
+	
 	 */
 	private static void SetupPostBoxUI(TextArea Title, TextArea Body, TextArea timeTakenArea ){
 		Title.setMinWidth(100);
@@ -307,6 +306,16 @@ public class ViewLessonsAdmin {
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
 	}
+	
+	/**********
+	 * <p> Method: Publish() </p>
+	 * 
+	 * <p> Description: This method cleans all of the text, and attempts to send it to the database
+	 * 	   after passing it through the publishingInputValidation(t, b, tt) method.  Then it pushes
+	 *     to database and calls refreshFeed()</p>
+	 * 
+	 */
+	
 	private void Publish() {
 		String Err[];
 		
@@ -328,7 +337,13 @@ public class ViewLessonsAdmin {
 			refreshFeed();
 			}
 	}
-	
+	/**********
+	 * <p> Method: refreshFeed() </p>
+	 * 
+	 * <p> Description: This method calls getAllPosts() from the data base formatted as lessonPosts, and then
+	 *     iterates through them to format them into Lesson Boxes using the createNewPostBox(LP) function</p>
+	 * 
+	 */
 	private void refreshFeed() {
 		LessonsBox.getChildren().clear();
 		List<lessonPost> lPosts = theDatabase.getAllPosts();
@@ -336,6 +351,17 @@ public class ViewLessonsAdmin {
 			LessonsBox.getChildren().add(createNewPostBox(LP));
 			}
 	}
+	/**********
+	 * <p> Method: createNewPostBox(lessonPost LP) </p>
+	 * 
+	 * @param LP takes in a lessonPost object
+	 * 
+	 * <p> Description: setups up UI for displaying the information stored in a single LP in the form of a VBox
+	 * 	   The display also changes based on the status of certain boolean from the LP object</p>
+	 * 
+	 * @return newPost a vBox object containing all of the UI information
+	 * 
+	 */
 	private VBox createNewPostBox(lessonPost LP) {
 		VBox newPost = new VBox(8);
 		
@@ -468,6 +494,16 @@ public class ViewLessonsAdmin {
 		
 		return newPost;
 	}
+	/**********
+	 * <p> Method: publishingInputValidation(String Title, String Body, String timeTaken) </p>
+	 * 
+	 * <p> Description: Checks title, Body, and timeTaken to see if they're valid lengths</p>
+	 * 
+	 * @param Title
+	 * @param Body
+	 * @param timeTaken
+	 * 
+	 */
 	private String[] publishingInputValidation(String title, String Body, String timeTaken) {
 		// Input type refers to (0) Title, (1) Body, (2) time taken
 		
